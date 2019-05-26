@@ -6,6 +6,7 @@ import (
 
 	lp "github.com/RTradeLtd/rtns/internal/libp2p"
 	"github.com/ipfs/go-datastore"
+	dssync "github.com/ipfs/go-datastore/sync"
 	"github.com/ipfs/go-ipfs/namesys"
 	"github.com/ipfs/go-path"
 	ci "github.com/libp2p/go-libp2p-crypto"
@@ -31,11 +32,11 @@ type Publisher struct {
 // NOTE: this DHT isn't bootstrapped
 func NewPublisher(ctx context.Context, dsPath string, pk ci.PrivKey, listenAddrs []multiaddr.Multiaddr) (*Publisher, error) {
 	ps := pstoremem.NewPeerstore()
-	ht, dt, err := lp.SetupLibp2p(ctx, pk, nil, listenAddrs, ps)
+	ds := dssync.MutexWrap(datastore.NewMapDatastore())
+	ht, dt, err := lp.SetupLibp2p(ctx, pk, nil, listenAddrs, ps, ds)
 	if err != nil {
 		return nil, err
 	}
-	ds := datastore.NewMapDatastore()
 	return &Publisher{
 		h:   ht,
 		d:   dt,

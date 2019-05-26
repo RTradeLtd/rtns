@@ -3,6 +3,7 @@ package libp2p
 import (
 	"context"
 
+	datastore "github.com/ipfs/go-datastore"
 	config "github.com/ipfs/go-ipfs-config"
 	"github.com/ipfs/go-ipns"
 	"github.com/libp2p/go-libp2p"
@@ -29,6 +30,7 @@ func SetupLibp2p(
 	secret []byte,
 	listenAddrs []multiaddr.Multiaddr,
 	pstore peerstore.Peerstore,
+	dstore datastore.Batching,
 ) (host.Host, *dht.IpfsDHT, error) {
 
 	var (
@@ -66,6 +68,7 @@ func SetupLibp2p(
 			"pk":   record.PublicKeyValidator{},
 			"ipns": ipns.Validator{KeyBook: pstore},
 		}),
+		dhtOpts.Datastore(dstore),
 	)
 	if err != nil {
 		h.Close()
