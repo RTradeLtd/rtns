@@ -31,7 +31,6 @@ func Test_New_Publisher(t *testing.T) {
 	pk1 := newPK(t)
 	pk2 := newPK(t)
 	publisher.Bootstrap(lp.DefaultBootstrapPeers())
-	publisher.SetNameSys()
 	if err := publisher.Publish(ctx, pk1, ipfsPath1); err != nil {
 		t.Fatal(err)
 	}

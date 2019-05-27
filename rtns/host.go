@@ -43,12 +43,9 @@ func NewPublisher(ctx context.Context, dsPath string, pk ci.PrivKey, listenAddrs
 		pk:  pk,
 		ds:  ds,
 		ps:  ps,
+		ns:  namesys.NewNameSystem(dt, ds, 128),
 		ctx: ctx,
 	}, nil
-}
-
-func (p *Publisher) SetNameSys() {
-	p.ns = namesys.NewNameSystem(p.d, p.ds, 128)
 }
 
 // Close is used to close all service needed by our publisher
