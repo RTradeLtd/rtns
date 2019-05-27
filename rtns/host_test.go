@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"testing"
 
+	cfg "github.com/RTradeLtd/config/v2"
 	lp "github.com/RTradeLtd/rtns/internal/libp2p"
 	crypto "github.com/libp2p/go-libp2p-crypto"
 	peer "github.com/libp2p/go-libp2p-peer"
@@ -24,14 +25,14 @@ func Test_New_Publisher(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	publisher, err := NewPublisher(ctx, "test", pk, []multiaddr.Multiaddr{addr})
+	publisher, err := NewPublisher(ctx, newServicesConfig(), "test", pk, []multiaddr.Multiaddr{addr})
 	if err != nil {
 		t.Fatal(err)
 	}
 	pk1 := newPK(t)
 	pk2 := newPK(t)
 	publisher.Bootstrap(lp.DefaultBootstrapPeers())
-	if err := publisher.Publish(ctx, pk1, ipfsPath1); err != nil {
+	if err := publisher.Publish(ctx, pk1, "pk1", ipfsPath1); err != nil {
 		t.Fatal(err)
 	}
 	pid, err := peer.IDFromPublicKey(pk1.GetPublic())
@@ -39,7 +40,7 @@ func Test_New_Publisher(t *testing.T) {
 		t.Fatal(err)
 	}
 	fmt.Println("pk1", pid.String())
-	if err := publisher.Publish(ctx, pk2, ipfsPath2); err != nil {
+	if err := publisher.Publish(ctx, pk2, "pk1", ipfsPath2); err != nil {
 		t.Fatal(err)
 	}
 	pid, err = peer.IDFromPublicKey(pk2.GetPublic())
@@ -56,4 +57,8 @@ func newPK(t *testing.T) crypto.PrivKey {
 		t.Fatal(err)
 	}
 	return pk
+}
+
+func newServicesConfig() cfg.Services {
+	return cfg.Services{}
 }
