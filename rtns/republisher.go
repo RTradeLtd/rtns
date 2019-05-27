@@ -12,21 +12,18 @@ import (
 	proto "github.com/gogo/protobuf/proto"
 	ds "github.com/ipfs/go-datastore"
 	pb "github.com/ipfs/go-ipns/pb"
-	logging "github.com/ipfs/go-log"
-	ic "github.com/libp2p/go-libp2p-crypto"
+	ci "github.com/libp2p/go-libp2p-crypto"
 	peer "github.com/libp2p/go-libp2p-peer"
 )
 
-// modified version of the one contained in ipfs/go-ipfs/namesys
-var errNoEntry = errors.New("no previous entry")
+///////////////////////////////////////////////////////////////////
+// modified version of the one contained in ipfs/go-ipfs/namesys //
+///////////////////////////////////////////////////////////////////
 
-var log = logging.Logger("ipns-repub")
+var errNoEntry = errors.New("no previous entry")
 
 // DefaultRebroadcastInterval is the default interval at which we rebroadcast IPNS records
 var DefaultRebroadcastInterval = time.Hour * 4
-
-// InitialRebroadcastDelay is the delay before first broadcasting IPNS records on start
-var InitialRebroadcastDelay = time.Minute * 1
 
 // FailureRetryInterval is the interval at which we retry IPNS records broadcasts (when they fail)
 var FailureRetryInterval = time.Minute * 5
@@ -68,13 +65,11 @@ func (p *Publisher) republishEntries() error {
 	return nil
 }
 
-func (p *Publisher) republishEntry(ctx context.Context, priv ic.PrivKey) error {
+func (p *Publisher) republishEntry(ctx context.Context, priv ci.PrivKey) error {
 	id, err := peer.IDFromPrivateKey(priv)
 	if err != nil {
 		return err
 	}
-
-	log.Debugf("republishing ipns entry for %s", id)
 
 	// Look for it locally only
 	lv, err := p.getLastVal(id)
