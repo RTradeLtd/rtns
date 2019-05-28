@@ -34,47 +34,47 @@ var FailureRetryInterval = time.Minute * 5
 const DefaultRecordLifetime = time.Hour * 24
 
 // StartRepublisher is used to start our republisher service
-func (p *Publisher) startRepublisher() {
+func (r *RTNS) startRepublisher() {
 	timer := time.NewTimer(DefaultRebroadcastInterval)
 	defer timer.Stop()
 	for {
 		select {
 		case <-timer.C:
-			if err := p.republishEntries(); err != nil {
+			if err := r.republishEntries(); err != nil {
 				fmt.Println("failed to republish entries", err.Error())
 				timer.Reset(FailureRetryInterval)
 			}
-		case <-p.ctx.Done():
+		case <-r.ctx.Done():
 			return
 		}
 	}
 }
 
-func (p *Publisher) republishEntries() error {
-	keys := p.cache.List()
+func (r *RTNS) republishEntries() error {
+	keys := r.cache.List()
 	if len(keys) == 0 {
 		return errNoRecordsPublisher
 	}
 	for _, key := range keys {
-		priv, err := p.keys.Get(key)
+		priv, err := r.keys.Get(key)
 		if err != nil {
 			return errNoEntry
 		}
-		if err := p.republishEntry(p.ctx, priv); err != nil {
+		if err := r.republishEntry(r.ctx, priv); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
-func (p *Publisher) republishEntry(ctx context.Context, priv ci.PrivKey) error {
+func (r *RTNS) republishEntry(ctx context.Context, priv ci.PrivKey) error {
 	id, err := peer.IDFromPrivateKey(priv)
 	if err != nil {
 		return err
 	}
 
 	// Look for it locally only
-	lv, err := p.getLastVal(id)
+	lv, err := r.getLastVal(id)
 	if err != nil {
 		if err == errNoEntry {
 			return nil
@@ -84,12 +84,12 @@ func (p *Publisher) republishEntry(ctx context.Context, priv ci.PrivKey) error {
 
 	// update record with same sequence number
 	eol := time.Now().Add(DefaultRecordLifetime)
-	return p.ns.PublishWithEOL(ctx, priv, lv, eol)
+	return r.ns.PublishWithEOL(ctx, priv, lv, eol)
 }
 
-func (p *Publisher) getLastVal(id peer.ID) (path.Path, error) {
+func (r *RTNS) getLastVal(id peer.ID) (path.Path, error) {
 	// Look for it locally only
-	val, err := p.ds.Get(namesys.IpnsDsKey(id))
+	val, err := r.ds.Get(namesys.IpnsDsKey(id))
 	switch err {
 	case nil:
 	case ds.ErrNotFound:

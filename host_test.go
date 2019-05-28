@@ -56,24 +56,24 @@ func Test_New_Publisher(t *testing.T) {
 	// setup publisher //
 	////////////////////
 
-	publisher := newPublisher(ctx, t, fkb, fns)
-	defer publisher.Close()
-	publisher.Bootstrap(lp.DefaultBootstrapPeers())
+	rtns := newRTNS(ctx, t, fkb, fns)
+	defer rtns.Close()
+	rtns.Bootstrap(lp.DefaultBootstrapPeers())
 
 	//////////////////
 	// start tests //
 	////////////////
 
 	// ensure no previous records have been published
-	if err := publisher.republishEntries(); err != errNoRecordsPublisher {
+	if err := rtns.republishEntries(); err != errNoRecordsPublisher {
 		t.Fatal("wrong error received")
 	}
 
-	if err := publisher.Publish(ctx, pk1, "pk1", ipfsPath1); err != nil {
+	if err := rtns.Publish(ctx, pk1, "pk1", ipfsPath1); err != nil {
 		t.Fatal(err)
 	}
-	if len(publisher.cache.List()) != 1 {
-		fmt.Println("cache length:", len(publisher.cache.List()))
+	if len(rtns.cache.List()) != 1 {
+		fmt.Println("cache length:", len(rtns.cache.List()))
 		t.Fatal("invalid cache length")
 	}
 	pid, err := peer.IDFromPublicKey(pk1.GetPublic())
@@ -82,11 +82,11 @@ func Test_New_Publisher(t *testing.T) {
 	}
 	fmt.Println("pk1", pid.String())
 
-	if err := publisher.Publish(ctx, pk2, "pk2", ipfsPath2); err != nil {
+	if err := rtns.Publish(ctx, pk2, "pk2", ipfsPath2); err != nil {
 		t.Fatal(err)
 	}
-	if len(publisher.cache.List()) != 2 {
-		fmt.Println("cache length:", len(publisher.cache.List()))
+	if len(rtns.cache.List()) != 2 {
+		fmt.Println("cache length:", len(rtns.cache.List()))
 		t.Fatal("invalid cache length")
 	}
 	pid, err = peer.IDFromPublicKey(pk2.GetPublic())
@@ -95,24 +95,24 @@ func Test_New_Publisher(t *testing.T) {
 	}
 	fmt.Println("pk2", pid.String())
 
-	if err := publisher.republishEntries(); err != nil {
+	if err := rtns.republishEntries(); err != nil {
 		t.Fatal(err)
 	}
 }
 
-func newPublisher(ctx context.Context, t *testing.T, fkb *mocks.FakeServiceClient, fns *mocks.FakeNameSystem) *Publisher {
+func newRTNS(ctx context.Context, t *testing.T, fkb *mocks.FakeServiceClient, fns *mocks.FakeNameSystem) *RTNS {
 	pk := newPK(t)
 	addr, err := multiaddr.NewMultiaddr("/ip4/0.0.0.0/tcp/4005")
 	if err != nil {
 		t.Fatal(err)
 	}
-	publisher, err := NewPublisher(ctx, newServicesConfig(), "test", pk, []multiaddr.Multiaddr{addr})
+	rtns, err := NewRTNS(ctx, newServicesConfig(), "test", pk, []multiaddr.Multiaddr{addr})
 	if err != nil {
 		t.Fatal(err)
 	}
-	publisher.keys.kb = &kaas.Client{ServiceClient: fkb}
-	publisher.ns = fns
-	return publisher
+	rtns.keys.kb = &kaas.Client{ServiceClient: fkb}
+	rtns.ns = fns
+	return rtns
 }
 func newPK(t *testing.T) crypto.PrivKey {
 	pk, _, err := crypto.GenerateKeyPair(crypto.ECDSA, 2048)

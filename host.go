@@ -19,8 +19,10 @@ import (
 	"github.com/multiformats/go-multiaddr"
 )
 
-// Publisher provides a helper to publish IPNS records
-type Publisher struct {
+// RTNS is a standalone IPNS publishing service
+// for use with the kaas keystore enabling secure
+// management of IPNS records
+type RTNS struct {
 	h     host.Host
 	pk    ci.PrivKey
 	d     *dht.IpfsDHT
@@ -32,9 +34,9 @@ type Publisher struct {
 	cache *Cache
 }
 
-// NewPublisher is used to instantiate our IPNS publisher service
+// NewRTNS is used to instantiate our RTNS service
 // NOTE: this DHT isn't bootstrapped
-func NewPublisher(ctx context.Context, krabConfig cfg.Services, dsPath string, pk ci.PrivKey, listenAddrs []multiaddr.Multiaddr) (*Publisher, error) {
+func NewRTNS(ctx context.Context, krabConfig cfg.Services, dsPath string, pk ci.PrivKey, listenAddrs []multiaddr.Multiaddr) (*RTNS, error) {
 	ps := pstoremem.NewPeerstore()
 	ds := dssync.MutexWrap(datastore.NewMapDatastore())
 	ht, dt, err := lp.SetupLibp2p(ctx, pk, nil, listenAddrs, ps, ds)
@@ -45,7 +47,7 @@ func NewPublisher(ctx context.Context, krabConfig cfg.Services, dsPath string, p
 	if err != nil {
 		return nil, err
 	}
-	p := &Publisher{
+	r := &RTNS{
 		h:     ht,
 		d:     dt,
 		pk:    pk,
@@ -56,25 +58,25 @@ func NewPublisher(ctx context.Context, krabConfig cfg.Services, dsPath string, p
 		keys:  NewRKeystore(ctx, kb1),
 		cache: NewCache(),
 	}
-	go p.startRepublisher()
-	return p, nil
+	go r.startRepublisher()
+	return r, nil
 }
 
 // Close is used to close all service needed by our publisher
-func (p *Publisher) Close() {
-	if err := p.d.Close(); err != nil {
+func (r *RTNS) Close() {
+	if err := r.d.Close(); err != nil {
 		fmt.Println("error shutting down dht:", err.Error())
 	}
-	if err := p.h.Close(); err != nil {
+	if err := r.h.Close(); err != nil {
 		fmt.Println("error shutting down host:", err.Error())
 	}
-	if err := p.ds.Close(); err != nil {
+	if err := r.ds.Close(); err != nil {
 		fmt.Println("error shutting down datastore:", err.Error())
 	}
 }
 
 // Publish is used to publish content with a fixed lifetime and ttl
-func (p *Publisher) Publish(ctx context.Context, pk ci.PrivKey, keyID, content string) error {
-	p.cache.Set(keyID)
-	return p.ns.Publish(ctx, pk, path.FromString(content))
+func (r *RTNS) Publish(ctx context.Context, pk ci.PrivKey, keyID, content string) error {
+	r.cache.Set(keyID)
+	return r.ns.Publish(ctx, pk, path.FromString(content))
 }
