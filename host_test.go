@@ -115,8 +115,6 @@ func Test_Keystore(t *testing.T) {
 	fkb.HasPrivateKeyReturnsOnCall(1, &pb.Response{Status: "BAD"}, errors.New("no key"))
 	fkb.GetPrivateKeyReturnsOnCall(0, &pb.Response{Status: "OK", PrivateKey: pkBytes}, nil)
 	fkb.GetPrivateKeyReturnsOnCall(1, &pb.Response{Status: "BAD"}, errors.New("no keys"))
-	fkb.ListPrivateKeysReturnsOnCall(0, &pb.Response{Status: "OK", KeyIDs: []string{"hello"}}, nil)
-	fkb.ListPrivateKeysReturnsOnCall(1, &pb.Response{Status: "BAD", KeyIDs: nil}, errors.New("no keys"))
 
 	rk := NewRKeystore(ctx, &kaas.Client{ServiceClient: fkb})
 
@@ -155,15 +153,10 @@ func Test_Keystore(t *testing.T) {
 	}
 
 	// test list
-	if ids, err := rk.List(); err != nil {
-		t.Fatal(err)
-	} else if len(ids) != 1 {
-		t.Fatal("bad key length returned")
-	}
 	if ids, err := rk.List(); err == nil {
 		t.Fatal("error expected")
 	} else if len(ids) != 0 {
-		t.Fatal("bad key length")
+		t.Fatal("bad key length returned")
 	}
 }
 

@@ -60,10 +60,5 @@ func (rk *RKeystore) Delete(string) error {
 
 // List returns a list of key identifier
 func (rk *RKeystore) List() ([]string, error) {
-	// limit of 0 indicates process all
-	resp, err := rk.kb.ListPrivateKeys(rk.ctx, &pb.KeyList{Limit: 0})
-	if err != nil {
-		return nil, err
-	}
-	return resp.GetKeyIDs(), nil
+	return nil, errors.New("list not implemented")
 }
