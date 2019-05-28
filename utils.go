@@ -4,8 +4,16 @@ import (
 	"fmt"
 	"sync"
 
+	lp "github.com/RTradeLtd/rtns/internal/libp2p"
 	peerstore "github.com/libp2p/go-libp2p-peerstore"
 )
+
+// DefaultBootstrap is a wrapper around Bootstrap
+// that handles bootstrapping to the default libp2p bootstrap
+// nodes, as well as the Temporal production nodes
+func (r *RTNS) DefaultBootstrap() {
+	r.Bootstrap(lp.DefaultBootstrapPeers())
+}
 
 // Bootstrap is an optional helper to connect to the given peers and bootstrap
 // the Peer DHT (and Bitswap). This is a best-effort function. Errors are only

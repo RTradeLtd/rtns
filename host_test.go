@@ -10,7 +10,6 @@ import (
 	cfg "github.com/RTradeLtd/config/v2"
 	pb "github.com/RTradeLtd/grpc/krab"
 	kaas "github.com/RTradeLtd/kaas/v2"
-	lp "github.com/RTradeLtd/rtns/internal/libp2p"
 	"github.com/RTradeLtd/rtns/mocks"
 	crypto "github.com/libp2p/go-libp2p-crypto"
 	peer "github.com/libp2p/go-libp2p-peer"
@@ -59,7 +58,7 @@ func Test_New_Publisher(t *testing.T) {
 
 	rtns := newRTNS(ctx, t, fkb, fns)
 	defer rtns.Close()
-	rtns.Bootstrap(lp.DefaultBootstrapPeers())
+	rtns.DefaultBootstrap()
 
 	//////////////////
 	// start tests //
