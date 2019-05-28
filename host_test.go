@@ -51,8 +51,7 @@ func Test_New_Publisher(t *testing.T) {
 	fns := &mocks.FakeNameSystem{}
 	fns.PublishReturnsOnCall(0, nil)
 	fns.PublishReturnsOnCall(1, nil)
-	fns.PublishReturnsOnCall(2, nil)
-	fns.PublishReturnsOnCall(3, nil)
+	fns.PublishReturnsOnCall(2, errors.New("publish failed"))
 
 	//////////////////////
 	// setup publisher //
@@ -99,6 +98,10 @@ func Test_New_Publisher(t *testing.T) {
 
 	if err := rtns.republishEntries(); err != nil {
 		t.Fatal(err)
+	}
+
+	if err := rtns.Publish(ctx, pk2, "pk2", ipfsPath2); err == nil {
+		t.Fatal("error expected")
 	}
 }
 
