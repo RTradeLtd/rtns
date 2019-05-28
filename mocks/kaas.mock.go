@@ -40,6 +40,36 @@ type FakeServiceClient struct {
 		result1 *krab.Response
 		result2 error
 	}
+	HasPrivateKeyStub        func(context.Context, *krab.KeyGet, ...grpc.CallOption) (*krab.Response, error)
+	hasPrivateKeyMutex       sync.RWMutex
+	hasPrivateKeyArgsForCall []struct {
+		arg1 context.Context
+		arg2 *krab.KeyGet
+		arg3 []grpc.CallOption
+	}
+	hasPrivateKeyReturns struct {
+		result1 *krab.Response
+		result2 error
+	}
+	hasPrivateKeyReturnsOnCall map[int]struct {
+		result1 *krab.Response
+		result2 error
+	}
+	ListPrivateKeysStub        func(context.Context, *krab.KeyList, ...grpc.CallOption) (*krab.Response, error)
+	listPrivateKeysMutex       sync.RWMutex
+	listPrivateKeysArgsForCall []struct {
+		arg1 context.Context
+		arg2 *krab.KeyList
+		arg3 []grpc.CallOption
+	}
+	listPrivateKeysReturns struct {
+		result1 *krab.Response
+		result2 error
+	}
+	listPrivateKeysReturnsOnCall map[int]struct {
+		result1 *krab.Response
+		result2 error
+	}
 	PutPrivateKeyStub        func(context.Context, *krab.KeyPut, ...grpc.CallOption) (*krab.Response, error)
 	putPrivateKeyMutex       sync.RWMutex
 	putPrivateKeyArgsForCall []struct {
@@ -189,6 +219,136 @@ func (fake *FakeServiceClient) GetPrivateKeyReturnsOnCall(i int, result1 *krab.R
 	}{result1, result2}
 }
 
+func (fake *FakeServiceClient) HasPrivateKey(arg1 context.Context, arg2 *krab.KeyGet, arg3 ...grpc.CallOption) (*krab.Response, error) {
+	fake.hasPrivateKeyMutex.Lock()
+	ret, specificReturn := fake.hasPrivateKeyReturnsOnCall[len(fake.hasPrivateKeyArgsForCall)]
+	fake.hasPrivateKeyArgsForCall = append(fake.hasPrivateKeyArgsForCall, struct {
+		arg1 context.Context
+		arg2 *krab.KeyGet
+		arg3 []grpc.CallOption
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("HasPrivateKey", []interface{}{arg1, arg2, arg3})
+	fake.hasPrivateKeyMutex.Unlock()
+	if fake.HasPrivateKeyStub != nil {
+		return fake.HasPrivateKeyStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.hasPrivateKeyReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeServiceClient) HasPrivateKeyCallCount() int {
+	fake.hasPrivateKeyMutex.RLock()
+	defer fake.hasPrivateKeyMutex.RUnlock()
+	return len(fake.hasPrivateKeyArgsForCall)
+}
+
+func (fake *FakeServiceClient) HasPrivateKeyCalls(stub func(context.Context, *krab.KeyGet, ...grpc.CallOption) (*krab.Response, error)) {
+	fake.hasPrivateKeyMutex.Lock()
+	defer fake.hasPrivateKeyMutex.Unlock()
+	fake.HasPrivateKeyStub = stub
+}
+
+func (fake *FakeServiceClient) HasPrivateKeyArgsForCall(i int) (context.Context, *krab.KeyGet, []grpc.CallOption) {
+	fake.hasPrivateKeyMutex.RLock()
+	defer fake.hasPrivateKeyMutex.RUnlock()
+	argsForCall := fake.hasPrivateKeyArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeServiceClient) HasPrivateKeyReturns(result1 *krab.Response, result2 error) {
+	fake.hasPrivateKeyMutex.Lock()
+	defer fake.hasPrivateKeyMutex.Unlock()
+	fake.HasPrivateKeyStub = nil
+	fake.hasPrivateKeyReturns = struct {
+		result1 *krab.Response
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeServiceClient) HasPrivateKeyReturnsOnCall(i int, result1 *krab.Response, result2 error) {
+	fake.hasPrivateKeyMutex.Lock()
+	defer fake.hasPrivateKeyMutex.Unlock()
+	fake.HasPrivateKeyStub = nil
+	if fake.hasPrivateKeyReturnsOnCall == nil {
+		fake.hasPrivateKeyReturnsOnCall = make(map[int]struct {
+			result1 *krab.Response
+			result2 error
+		})
+	}
+	fake.hasPrivateKeyReturnsOnCall[i] = struct {
+		result1 *krab.Response
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeServiceClient) ListPrivateKeys(arg1 context.Context, arg2 *krab.KeyList, arg3 ...grpc.CallOption) (*krab.Response, error) {
+	fake.listPrivateKeysMutex.Lock()
+	ret, specificReturn := fake.listPrivateKeysReturnsOnCall[len(fake.listPrivateKeysArgsForCall)]
+	fake.listPrivateKeysArgsForCall = append(fake.listPrivateKeysArgsForCall, struct {
+		arg1 context.Context
+		arg2 *krab.KeyList
+		arg3 []grpc.CallOption
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("ListPrivateKeys", []interface{}{arg1, arg2, arg3})
+	fake.listPrivateKeysMutex.Unlock()
+	if fake.ListPrivateKeysStub != nil {
+		return fake.ListPrivateKeysStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.listPrivateKeysReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeServiceClient) ListPrivateKeysCallCount() int {
+	fake.listPrivateKeysMutex.RLock()
+	defer fake.listPrivateKeysMutex.RUnlock()
+	return len(fake.listPrivateKeysArgsForCall)
+}
+
+func (fake *FakeServiceClient) ListPrivateKeysCalls(stub func(context.Context, *krab.KeyList, ...grpc.CallOption) (*krab.Response, error)) {
+	fake.listPrivateKeysMutex.Lock()
+	defer fake.listPrivateKeysMutex.Unlock()
+	fake.ListPrivateKeysStub = stub
+}
+
+func (fake *FakeServiceClient) ListPrivateKeysArgsForCall(i int) (context.Context, *krab.KeyList, []grpc.CallOption) {
+	fake.listPrivateKeysMutex.RLock()
+	defer fake.listPrivateKeysMutex.RUnlock()
+	argsForCall := fake.listPrivateKeysArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeServiceClient) ListPrivateKeysReturns(result1 *krab.Response, result2 error) {
+	fake.listPrivateKeysMutex.Lock()
+	defer fake.listPrivateKeysMutex.Unlock()
+	fake.ListPrivateKeysStub = nil
+	fake.listPrivateKeysReturns = struct {
+		result1 *krab.Response
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeServiceClient) ListPrivateKeysReturnsOnCall(i int, result1 *krab.Response, result2 error) {
+	fake.listPrivateKeysMutex.Lock()
+	defer fake.listPrivateKeysMutex.Unlock()
+	fake.ListPrivateKeysStub = nil
+	if fake.listPrivateKeysReturnsOnCall == nil {
+		fake.listPrivateKeysReturnsOnCall = make(map[int]struct {
+			result1 *krab.Response
+			result2 error
+		})
+	}
+	fake.listPrivateKeysReturnsOnCall[i] = struct {
+		result1 *krab.Response
+		result2 error
+	}{result1, result2}
+}
+
 func (fake *FakeServiceClient) PutPrivateKey(arg1 context.Context, arg2 *krab.KeyPut, arg3 ...grpc.CallOption) (*krab.Response, error) {
 	fake.putPrivateKeyMutex.Lock()
 	ret, specificReturn := fake.putPrivateKeyReturnsOnCall[len(fake.putPrivateKeyArgsForCall)]
@@ -261,6 +421,10 @@ func (fake *FakeServiceClient) Invocations() map[string][][]interface{} {
 	defer fake.deletePrivateKeyMutex.RUnlock()
 	fake.getPrivateKeyMutex.RLock()
 	defer fake.getPrivateKeyMutex.RUnlock()
+	fake.hasPrivateKeyMutex.RLock()
+	defer fake.hasPrivateKeyMutex.RUnlock()
+	fake.listPrivateKeysMutex.RLock()
+	defer fake.listPrivateKeysMutex.RUnlock()
 	fake.putPrivateKeyMutex.RLock()
 	defer fake.putPrivateKeyMutex.RUnlock()
 	copiedInvocations := map[string][][]interface{}{}
