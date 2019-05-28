@@ -6,7 +6,9 @@ import (
 	"testing"
 
 	cfg "github.com/RTradeLtd/config/v2"
+	kaas "github.com/RTradeLtd/kaas/v2"
 	lp "github.com/RTradeLtd/rtns/internal/libp2p"
+	"github.com/RTradeLtd/rtns/mocks"
 	crypto "github.com/libp2p/go-libp2p-crypto"
 	peer "github.com/libp2p/go-libp2p-peer"
 	"github.com/multiformats/go-multiaddr"
@@ -72,6 +74,7 @@ func newPublisher(ctx context.Context, t *testing.T) *Publisher {
 	if err != nil {
 		t.Fatal(err)
 	}
+	publisher.keys.kb = &kaas.Client{ServiceClient: &mocks.FakeServiceClient{}}
 	return publisher
 }
 func newPK(t *testing.T) crypto.PrivKey {
