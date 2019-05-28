@@ -29,7 +29,7 @@ type Publisher struct {
 	ps    peerstore.Peerstore
 	ctx   context.Context
 	keys  *RKeystore
-	cache Cache
+	cache *Cache
 }
 
 // NewPublisher is used to instantiate our IPNS publisher service

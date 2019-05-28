@@ -10,12 +10,12 @@ type Cache struct {
 }
 
 // NewCache is used to instantiate a new cache
-func NewCache() Cache {
-	return Cache{make(map[string]bool), sync.RWMutex{}}
+func NewCache() *Cache {
+	return &Cache{entries: make(map[string]bool)}
 }
 
 // Set is used to set an item in cache
-func (c Cache) Set(entry string) {
+func (c *Cache) Set(entry string) {
 	if c.exists(entry) {
 		return
 	}
@@ -24,7 +24,7 @@ func (c Cache) Set(entry string) {
 	c.mux.Unlock()
 }
 
-func (c Cache) exists(entry string) bool {
+func (c *Cache) exists(entry string) bool {
 	c.mux.RLock()
 	_, exists := c.entries[entry]
 	c.mux.RUnlock()
@@ -32,7 +32,7 @@ func (c Cache) exists(entry string) bool {
 }
 
 // List is used to list items in our cache
-func (c Cache) List() []string {
+func (c *Cache) List() []string {
 	c.mux.RLock()
 	var entries []string
 	for entry := range c.entries {
