@@ -70,7 +70,7 @@ func Test_New_Publisher(t *testing.T) {
 		t.Fatal("wrong error received")
 	}
 
-	if err := rtns.Publish(ctx, pk1, "pk1", ipfsPath1); err != nil {
+	if err := rtns.Publish(ctx, pk1, true, "pk1", ipfsPath1); err != nil {
 		t.Fatal(err)
 	}
 	if len(rtns.cache.List()) != 1 {
@@ -83,7 +83,7 @@ func Test_New_Publisher(t *testing.T) {
 	}
 	fmt.Println("pk1", pid.String())
 
-	if err := rtns.Publish(ctx, pk2, "pk2", ipfsPath2); err != nil {
+	if err := rtns.Publish(ctx, pk2, true, "pk2", ipfsPath2); err != nil {
 		t.Fatal(err)
 	}
 	if len(rtns.cache.List()) != 2 {
@@ -100,7 +100,7 @@ func Test_New_Publisher(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if err := rtns.Publish(ctx, pk2, "pk2", ipfsPath2); err == nil {
+	if err := rtns.Publish(ctx, pk2, true, "pk2", ipfsPath2); err == nil {
 		t.Fatal("error expected")
 	}
 }

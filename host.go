@@ -76,7 +76,9 @@ func (r *RTNS) Close() {
 }
 
 // Publish is used to publish content with a fixed lifetime and ttl
-func (r *RTNS) Publish(ctx context.Context, pk ci.PrivKey, keyID, content string) error {
-	r.cache.Set(keyID)
+func (r *RTNS) Publish(ctx context.Context, pk ci.PrivKey, cache bool, keyID, content string) error {
+	if cache {
+		r.cache.Set(keyID)
+	}
 	return r.ns.Publish(ctx, pk, path.FromString(content))
 }
