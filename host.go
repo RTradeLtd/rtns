@@ -3,6 +3,7 @@ package rtns
 import (
 	"context"
 	"fmt"
+	"time"
 
 	cfg "github.com/RTradeLtd/config/v2"
 	kaas "github.com/RTradeLtd/kaas/v2"
@@ -81,4 +82,12 @@ func (r *RTNS) Publish(ctx context.Context, pk ci.PrivKey, cache bool, keyID, co
 		r.cache.Set(keyID)
 	}
 	return r.ns.Publish(ctx, pk, path.FromString(content))
+}
+
+// PublishWithEOL is used to publish an IPNS record with non default lifetime values
+func (r *RTNS) PublishWithEOL(ctx context.Context, pk ci.PrivKey, eol time.Time, cache bool, keyID, content string) error {
+	if cache {
+		r.cache.Set(keyID)
+	}
+	return r.ns.PublishWithEOL(ctx, pk, path.FromString(content), eol)
 }
