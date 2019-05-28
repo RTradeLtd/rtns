@@ -45,7 +45,7 @@ func NewPublisher(ctx context.Context, krabConfig cfg.Services, dsPath string, p
 	if err != nil {
 		return nil, err
 	}
-	return &Publisher{
+	p := &Publisher{
 		h:     ht,
 		d:     dt,
 		pk:    pk,
@@ -55,7 +55,9 @@ func NewPublisher(ctx context.Context, krabConfig cfg.Services, dsPath string, p
 		ctx:   ctx,
 		keys:  NewRKeystore(kb1),
 		cache: NewCache(),
-	}, nil
+	}
+	go p.startRepublisher()
+	return p, nil
 }
 
 // Close is used to close all service needed by our publisher

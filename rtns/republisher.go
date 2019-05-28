@@ -22,6 +22,8 @@ import (
 
 var errNoEntry = errors.New("no previous entry")
 
+var errNoRecordsPublisher = errors.New("no records published yet")
+
 // DefaultRebroadcastInterval is the default interval at which we rebroadcast IPNS records
 var DefaultRebroadcastInterval = time.Hour * 4
 
@@ -32,7 +34,7 @@ var FailureRetryInterval = time.Minute * 5
 const DefaultRecordLifetime = time.Hour * 24
 
 // StartRepublisher is used to start our republisher service
-func (p *Publisher) StartRepublisher() {
+func (p *Publisher) startRepublisher() {
 	timer := time.NewTimer(DefaultRebroadcastInterval)
 	defer timer.Stop()
 	for {
@@ -51,7 +53,7 @@ func (p *Publisher) StartRepublisher() {
 func (p *Publisher) republishEntries() error {
 	keys := p.cache.List()
 	if len(keys) == 0 {
-		return nil
+		return errNoRecordsPublisher
 	}
 	for _, key := range keys {
 		priv, err := p.keys.Get(key)
