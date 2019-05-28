@@ -5,3 +5,5 @@ gen:
 	@echo "===================    regenerating code    ==================="
 	$(COUNTERFEITER) -o ./mocks/kaas.mock.go \
 		github.com/RTradeLtd/grpc/krab.ServiceClient
+	$(COUNTERFEITER) -o ./mocks/namesys.mock.go \
+		github.com/ipfs/go-ipfs/namesys.NameSystem
