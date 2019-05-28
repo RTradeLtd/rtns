@@ -85,6 +85,9 @@ func (r *RTNS) Publish(ctx context.Context, pk ci.PrivKey, cache bool, keyID, co
 }
 
 // PublishWithEOL is used to publish an IPNS record with non default lifetime values
-func (r *RTNS) PublishWithEOL(ctx context.Context, pk ci.PrivKey, content string, eol time.Time) error {
+func (r *RTNS) PublishWithEOL(ctx context.Context, pk ci.PrivKey, eol time.Time, cache bool, keyID, content string) error {
+	if cache {
+		r.cache.Set(keyID)
+	}
 	return r.ns.PublishWithEOL(ctx, pk, path.FromString(content), eol)
 }

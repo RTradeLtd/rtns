@@ -4,7 +4,8 @@ rtns is a IPNS publishing service for use with [RTradeLtd/kaas](https://github.c
 
 # limitations
 
-When used within Temporal, any keys derived from the fail-over KaaS host are not eligible for automated republishing
+* When used within Temporal, any keys derived from the fail-over KaaS host are not eligible for automated republishing
+* When using PublishWithEOL, any republishes afterwards will republish using the default values
 
 # Future Improvements
 
