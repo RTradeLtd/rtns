@@ -12,7 +12,7 @@ import (
 // logged and a warning is printed when less than half of the given peers
 // could be contacted. It is fine to pass a list where some peers will not be
 // reachable.
-func (p *Publisher) Bootstrap(peers []peerstore.PeerInfo) {
+func (r *RTNS) Bootstrap(peers []peerstore.PeerInfo) {
 	connected := make(chan struct{})
 
 	var wg sync.WaitGroup
@@ -21,7 +21,7 @@ func (p *Publisher) Bootstrap(peers []peerstore.PeerInfo) {
 		wg.Add(1)
 		go func(pinfo peerstore.PeerInfo) {
 			defer wg.Done()
-			err := p.h.Connect(p.ctx, pinfo)
+			err := r.h.Connect(r.ctx, pinfo)
 			if err != nil {
 				fmt.Println("error", err.Error())
 				return
@@ -44,7 +44,7 @@ func (p *Publisher) Bootstrap(peers []peerstore.PeerInfo) {
 		fmt.Printf("only connected to %d bootstrap peers out of %d\n", i, nPeers)
 	}
 
-	err := p.d.Bootstrap(p.ctx)
+	err := r.d.Bootstrap(r.ctx)
 	if err != nil {
 		fmt.Println(err)
 		return
