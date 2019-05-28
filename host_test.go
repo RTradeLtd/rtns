@@ -173,7 +173,7 @@ func newRTNS(ctx context.Context, t *testing.T, fkb *mocks.FakeServiceClient, fn
 	if err != nil {
 		t.Fatal(err)
 	}
-	rtns.keys.kb = &kaas.Client{ServiceClient: fkb}
+	rtns.Keys.kb = &kaas.Client{ServiceClient: fkb}
 	rtns.ns = fns
 	return rtns
 }

@@ -31,7 +31,7 @@ type RTNS struct {
 	ns    namesys.NameSystem
 	ps    peerstore.Peerstore
 	ctx   context.Context
-	keys  *RKeystore
+	Keys  *RKeystore
 	cache *Cache
 }
 
@@ -56,7 +56,7 @@ func NewRTNS(ctx context.Context, krabConfig cfg.Services, dsPath string, pk ci.
 		ps:    ps,
 		ns:    namesys.NewNameSystem(dt, ds, 128),
 		ctx:   ctx,
-		keys:  NewRKeystore(ctx, kb1),
+		Keys:  NewRKeystore(ctx, kb1),
 		cache: NewCache(),
 	}
 	go r.startRepublisher()
