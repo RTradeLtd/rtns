@@ -53,7 +53,7 @@ func NewPublisher(ctx context.Context, krabConfig cfg.Services, dsPath string, p
 		ps:    ps,
 		ns:    namesys.NewNameSystem(dt, ds, 128),
 		ctx:   ctx,
-		keys:  NewRKeystore(kb1),
+		keys:  NewRKeystore(ctx, kb1),
 		cache: NewCache(),
 	}
 	go p.startRepublisher()
