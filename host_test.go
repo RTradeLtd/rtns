@@ -2,7 +2,9 @@ package rtns
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"reflect"
 	"testing"
 
 	cfg "github.com/RTradeLtd/config/v2"
@@ -97,6 +99,71 @@ func Test_New_Publisher(t *testing.T) {
 
 	if err := rtns.republishEntries(); err != nil {
 		t.Fatal(err)
+	}
+}
+
+func Test_Keystore(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	fkb := &mocks.FakeServiceClient{}
+	pk := newPK(t)
+	pkBytes, err := pk.Bytes()
+	if err != nil {
+		t.Fatal(err)
+	}
+	fkb.HasPrivateKeyReturnsOnCall(0, &pb.Response{Status: "OK"}, nil)
+	fkb.HasPrivateKeyReturnsOnCall(1, &pb.Response{Status: "BAD"}, errors.New("no key"))
+	fkb.GetPrivateKeyReturnsOnCall(0, &pb.Response{Status: "OK", PrivateKey: pkBytes}, nil)
+	fkb.GetPrivateKeyReturnsOnCall(1, &pb.Response{Status: "BAD"}, errors.New("no keys"))
+	fkb.ListPrivateKeysReturnsOnCall(0, &pb.Response{Status: "OK", KeyIDs: []string{"hello"}}, nil)
+	fkb.ListPrivateKeysReturnsOnCall(1, &pb.Response{Status: "BAD", KeyIDs: nil}, errors.New("no keys"))
+
+	rk := NewRKeystore(ctx, &kaas.Client{ServiceClient: fkb})
+
+	// test has
+	if exists, err := rk.Has("hello"); err != nil {
+		t.Fatal(err)
+	} else if !exists {
+		t.Fatal("key should exist")
+	}
+	if exists, err := rk.Has("world"); err == nil {
+		t.Fatal("error expected")
+	} else if exists {
+		t.Fatal("key should not exist")
+	}
+
+	// test put
+	if err := rk.Put("abc", nil); err == nil {
+		t.Fatal("error expected")
+	}
+
+	// test get
+	if pkRet, err := rk.Get("abc"); err != nil {
+		t.Fatal(err)
+	} else if !reflect.DeepEqual(pk, pkRet) {
+		t.Fatal("keys should be equal")
+	}
+	if pkRet, err := rk.Get("abc"); err == nil {
+		t.Fatal("error expected")
+	} else if pkRet != nil {
+		t.Fatal("pk should be nil")
+	}
+
+	// test delete
+	if err := rk.Delete("abc"); err == nil {
+		t.Fatal("error expected")
+	}
+
+	// test list
+	if ids, err := rk.List(); err != nil {
+		t.Fatal(err)
+	} else if len(ids) != 1 {
+		t.Fatal("bad key length returned")
+	}
+	if ids, err := rk.List(); err == nil {
+		t.Fatal("error expected")
+	} else if len(ids) != 0 {
+		t.Fatal("bad key length")
 	}
 }
 
