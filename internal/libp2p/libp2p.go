@@ -21,6 +21,12 @@ import (
 	"github.com/multiformats/go-multiaddr"
 )
 
+// temporal bootstrap nodes
+var temporalBootstrap = []string{
+	"/ip4/172.218.49.115/tcp/4002/ipfs/QmPvnFXWAz1eSghXD6JKpHxaGjbVo4VhBXY2wdBxKPbne5",
+	"/ip4/172.218.49.115/tcp/4003/ipfs/QmXow5Vu8YXqvabkptQ7HddvNPpbLhXzmmU53yPCM54EQa",
+}
+
 // SetupLibp2p returns a routed host and DHT instances that can be used to
 // easily create a ipfslite Peer. The DHT is NOT bootstrapped. You may consider
 // to use Peer.Bootstrap() after creating the IPFS-Lite Peer.
@@ -79,10 +85,13 @@ func SetupLibp2p(
 }
 
 // DefaultBootstrapPeers returns the default lsit
-// of bootstrap peers
+// of bootstrap peers, with added temporal production
+// peers
 func DefaultBootstrapPeers() []peerstore.PeerInfo {
 	// conversion copied from go-ipfs
 	defaults, _ := config.DefaultBootstrapPeers()
+	tPeers, _ := config.ParseBootstrapPeers(temporalBootstrap)
+	defaults = append(defaults, tPeers...)
 	pinfos := make(map[peer.ID]*peerstore.PeerInfo)
 	for _, bootstrap := range defaults {
 		pinfo, ok := pinfos[bootstrap.ID()]
