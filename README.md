@@ -1,11 +1,12 @@
-# rtns
+# RTNS
 
-rtns is a IPNS publishing service for use with [RTradeLtd/kaas](https://github.com/RTradeLtd/kaas), with republishing of published records.
+RTNS (RTrade Name Service) is a stand-alone IPNS record management service, designed to facilitate secure publishing of IPNS records, leveraging an encrypted keystore known as [kaas](https://github.com/RTradeLtd/kaas). Internally it facilitates scheduled republishing of all published records.
 
-# limitations
+It is essentially a modified and condensed version of [go-ipfs/namesys](https://github.com/ipfs/go-ipfs/tree/master/namesys) with minor optimizations
+
+# Limitations
 
 * When used within Temporal, any keys derived from the fail-over KaaS host are not eligible for automated republishing
-* When using PublishWithEOL, any republishes afterwards will republish using the default values
 
 # Future Improvements
 
