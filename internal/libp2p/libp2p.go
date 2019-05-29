@@ -25,6 +25,7 @@ import (
 var temporalBootstrap = []string{
 	"/ip4/172.218.49.115/tcp/4002/ipfs/QmPvnFXWAz1eSghXD6JKpHxaGjbVo4VhBXY2wdBxKPbne5",
 	"/ip4/172.218.49.115/tcp/4003/ipfs/QmXow5Vu8YXqvabkptQ7HddvNPpbLhXzmmU53yPCM54EQa",
+	"/ip4/35.203.44.77/tcp/4001/ipfs/QmUMtzoRfQ6FttA7RygL8jJf7TZJBbdbZqKTmHfU6QC5Jm",
 }
 
 // SetupLibp2p returns a routed host and DHT instances that can be used to

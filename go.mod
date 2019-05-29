@@ -31,8 +31,10 @@ require (
 	github.com/ipfs/go-ipns v0.0.1
 	github.com/ipfs/go-mfs v0.0.11 // indirect
 	github.com/ipfs/go-path v0.0.7
+	github.com/ipfs/interface-go-ipfs-core v0.0.6
 	github.com/libp2p/go-libp2p v0.1.0
 	github.com/libp2p/go-libp2p-circuit v0.1.0
+	github.com/libp2p/go-libp2p-core v0.0.1
 	github.com/libp2p/go-libp2p-crypto v0.1.0
 	github.com/libp2p/go-libp2p-host v0.1.0
 	github.com/libp2p/go-libp2p-interface-pnet v0.1.0
