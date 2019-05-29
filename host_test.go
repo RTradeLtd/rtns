@@ -55,7 +55,7 @@ func Test_New_Publisher(t *testing.T) {
 	// setup publisher //
 	////////////////////
 
-	rtns := newRTNS(ctx, t, fkb, fns)
+	rtns := newTestRTNS(ctx, t, fkb, fns)
 	defer rtns.Close()
 	rtns.DefaultBootstrap()
 
@@ -161,7 +161,7 @@ func Test_Keystore(t *testing.T) {
 	}
 }
 
-func newRTNS(ctx context.Context, t *testing.T, fkb *mocks.FakeServiceClient, fns *mocks.FakeNameSystem) *RTNS {
+func newTestRTNS(ctx context.Context, t *testing.T, fkb *mocks.FakeServiceClient, fns *mocks.FakeNameSystem) *RTNS {
 	rtns, err := NewRTNS(ctx, &kaas.Client{ServiceClient: fkb}, newConfig(t))
 	if err != nil {
 		t.Fatal(err)

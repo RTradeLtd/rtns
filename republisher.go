@@ -56,7 +56,7 @@ func (r *RTNS) republishEntries() error {
 		return errNoRecordsPublisher
 	}
 	for _, key := range keys {
-		priv, err := r.Keys.Get(key)
+		priv, err := r.keys.Get(key)
 		if err != nil {
 			return errNoEntry
 		}
