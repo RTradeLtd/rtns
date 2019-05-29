@@ -24,6 +24,7 @@ import (
 type Service interface {
 	// service management
 	Close()
+	DefaultBootstrap()
 
 	// record publishing
 	Publish(ctx context.Context, pk ci.PrivKey, cache bool, keyID, content string) error
