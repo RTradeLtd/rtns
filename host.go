@@ -8,6 +8,7 @@ import (
 	kaas "github.com/RTradeLtd/kaas/v2"
 	lp "github.com/RTradeLtd/rtns/internal/libp2p"
 	"github.com/ipfs/go-datastore"
+	dssync "github.com/ipfs/go-datastore/sync"
 	"github.com/ipfs/go-ipfs/namesys"
 	"github.com/ipfs/go-path"
 	ci "github.com/libp2p/go-libp2p-crypto"
@@ -16,8 +17,6 @@ import (
 	peerstore "github.com/libp2p/go-libp2p-peerstore"
 	"github.com/libp2p/go-libp2p-peerstore/pstoremem"
 	"github.com/multiformats/go-multiaddr"
-
-	badger "github.com/ipfs/go-ds-badger"
 )
 
 // RTNS is a standalone IPNS publishing service
@@ -46,10 +45,7 @@ type Config struct {
 // NewRTNS is used to instantiate our RTNS service
 // NOTE: this DHT isn't bootstrapped
 func NewRTNS(ctx context.Context, kbClient *kaas.Client, cfg Config) (*RTNS, error) {
-	ds, err := badger.NewDatastore(cfg.DSPath, &badger.DefaultOptions)
-	if err != nil {
-		return nil, err
-	}
+	ds := dssync.MutexWrap(datastore.NewMapDatastore())
 	ps := pstoremem.NewPeerstore()
 	ht, dt, err := lp.SetupLibp2p(ctx, cfg.PK, cfg.Secret, cfg.ListenAddrs, ps, ds)
 	if err != nil {
