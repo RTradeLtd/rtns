@@ -186,5 +186,6 @@ func newConfig(t *testing.T) Config {
 	return Config{
 		PK:          pk,
 		ListenAddrs: []multiaddr.Multiaddr{addr},
+		DSPath:      "test",
 	}
 }
