@@ -7,7 +7,6 @@ import (
 	"reflect"
 	"testing"
 
-	cfg "github.com/RTradeLtd/config/v2"
 	pb "github.com/RTradeLtd/grpc/krab"
 	kaas "github.com/RTradeLtd/kaas/v2"
 	"github.com/RTradeLtd/rtns/mocks"
@@ -163,16 +162,10 @@ func Test_Keystore(t *testing.T) {
 }
 
 func newRTNS(ctx context.Context, t *testing.T, fkb *mocks.FakeServiceClient, fns *mocks.FakeNameSystem) *RTNS {
-	pk := newPK(t)
-	addr, err := multiaddr.NewMultiaddr("/ip4/0.0.0.0/tcp/4005")
+	rtns, err := NewRTNS(ctx, &kaas.Client{ServiceClient: fkb}, newConfig(t))
 	if err != nil {
 		t.Fatal(err)
 	}
-	rtns, err := NewRTNS(ctx, newServicesConfig(), "test", pk, []multiaddr.Multiaddr{addr})
-	if err != nil {
-		t.Fatal(err)
-	}
-	rtns.Keys.kb = &kaas.Client{ServiceClient: fkb}
 	rtns.ns = fns
 	return rtns
 }
@@ -184,6 +177,14 @@ func newPK(t *testing.T) crypto.PrivKey {
 	return pk
 }
 
-func newServicesConfig() cfg.Services {
-	return cfg.Services{}
+func newConfig(t *testing.T) Config {
+	pk := newPK(t)
+	addr, err := multiaddr.NewMultiaddr("/ip4/0.0.0.0/tcp/4005")
+	if err != nil {
+		t.Fatal(err)
+	}
+	return Config{
+		PK:          pk,
+		ListenAddrs: []multiaddr.Multiaddr{addr},
+	}
 }
