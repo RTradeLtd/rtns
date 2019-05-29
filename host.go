@@ -19,20 +19,33 @@ import (
 	"github.com/multiformats/go-multiaddr"
 )
 
-// Publisher defines an interface that must be used by RTNS services
-type Publisher interface {
+// Service implements the rtns logic
+// as a consumable service or library.
+type Service interface {
+	// service management
 	Close()
+
+	// record publishing
 	Publish(ctx context.Context, pk ci.PrivKey, cache bool, keyID, content string) error
 	PublishWithEOL(ctx context.Context, pk ci.PrivKey, eol time.Time, cache bool, keyID, content string) error
 
+	// key management
 	GetKey(name string) (ci.PrivKey, error)
 	HasKey(name string) (bool, error)
 }
 
-// RTNS is a standalone IPNS publishing service
-// for use with the kaas keystore enabling secure
-// management of IPNS records
-type RTNS struct {
+// Config is used to configure the RTNS service
+type Config struct {
+	DSPath      string
+	PK          ci.PrivKey
+	ListenAddrs []multiaddr.Multiaddr
+	Secret      []byte
+}
+
+// rtns manages all the needed components
+// to interact with public and private IPNS
+// networks.
+type rtns struct {
 	h     host.Host
 	pk    ci.PrivKey
 	d     *dht.IpfsDHT
@@ -44,34 +57,21 @@ type RTNS struct {
 	cache *Cache
 }
 
-// Config is used to configure the RTNS service
-type Config struct {
-	DSPath      string
-	PK          ci.PrivKey
-	ListenAddrs []multiaddr.Multiaddr
-	Secret      []byte
-}
-
-// NewPublisher is used to instantiate a new Publisher service
-func NewPublisher(ctx context.Context, kbClient *kaas.Client, cfg Config) (Publisher, error) {
+// NewService is used to instantiate an RTNS publisher service
+func NewService(ctx context.Context, kbClient *kaas.Client, cfg Config) (Service, error) {
 	return newRTNS(ctx, kbClient, cfg)
 }
 
-// NewRTNS is used to instantiate our RTNS service
-// NOTE: this DHT isn't bootstrapped
-func NewRTNS(ctx context.Context, kbClient *kaas.Client, cfg Config) (*RTNS, error) {
+// NewRTNS is used to instantiate our RTNS service, and start the republisher
+// intended to be used as a `Publisher` type by external libraries
+func newRTNS(ctx context.Context, kbClient *kaas.Client, cfg Config) (*rtns, error) {
 	ds := dssync.MutexWrap(datastore.NewMapDatastore())
-func newRTNS(ctx context.Context, kbClient *kaas.Client, cfg Config) (*RTNS, error) {
-	ds, err := badger.NewDatastore(cfg.DSPath, &badger.DefaultOptions)
-	if err != nil {
-		return nil, err
-	}
 	ps := pstoremem.NewPeerstore()
 	ht, dt, err := lp.SetupLibp2p(ctx, cfg.PK, cfg.Secret, cfg.ListenAddrs, ps, ds)
 	if err != nil {
 		return nil, err
 	}
-	r := &RTNS{
+	r := &rtns{
 		h:     ht,
 		d:     dt,
 		pk:    cfg.PK,
@@ -87,7 +87,7 @@ func newRTNS(ctx context.Context, kbClient *kaas.Client, cfg Config) (*RTNS, err
 }
 
 // Close is used to close all service needed by our publisher
-func (r *RTNS) Close() {
+func (r *rtns) Close() {
 	if err := r.d.Close(); err != nil {
 		fmt.Println("error shutting down dht:", err.Error())
 	}
@@ -100,7 +100,7 @@ func (r *RTNS) Close() {
 }
 
 // Publish is used to publish content with a fixed lifetime and ttl
-func (r *RTNS) Publish(ctx context.Context, pk ci.PrivKey, cache bool, keyID, content string) error {
+func (r *rtns) Publish(ctx context.Context, pk ci.PrivKey, cache bool, keyID, content string) error {
 	if cache {
 		r.cache.Set(keyID)
 	}
@@ -108,7 +108,7 @@ func (r *RTNS) Publish(ctx context.Context, pk ci.PrivKey, cache bool, keyID, co
 }
 
 // PublishWithEOL is used to publish an IPNS record with non default lifetime values
-func (r *RTNS) PublishWithEOL(ctx context.Context, pk ci.PrivKey, eol time.Time, cache bool, keyID, content string) error {
+func (r *rtns) PublishWithEOL(ctx context.Context, pk ci.PrivKey, eol time.Time, cache bool, keyID, content string) error {
 	if cache {
 		r.cache.Set(keyID)
 	}
@@ -117,12 +117,12 @@ func (r *RTNS) PublishWithEOL(ctx context.Context, pk ci.PrivKey, eol time.Time,
 
 // GetKey is used to retrieve a key from the
 // underlying keystore
-func (r *RTNS) GetKey(name string) (ci.PrivKey, error) {
+func (r *rtns) GetKey(name string) (ci.PrivKey, error) {
 	return r.keys.Get(name)
 }
 
 // HasKey is used to check if the underlying keystore
 // contains the desired key
-func (r *RTNS) HasKey(name string) (bool, error) {
+func (r *rtns) HasKey(name string) (bool, error) {
 	return r.keys.Has(name)
 }

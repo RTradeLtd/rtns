@@ -161,8 +161,8 @@ func Test_Keystore(t *testing.T) {
 	}
 }
 
-func newTestRTNS(ctx context.Context, t *testing.T, fkb *mocks.FakeServiceClient, fns *mocks.FakeNameSystem) *RTNS {
-	rtns, err := NewRTNS(ctx, &kaas.Client{ServiceClient: fkb}, newConfig(t))
+func newTestRTNS(ctx context.Context, t *testing.T, fkb *mocks.FakeServiceClient, fns *mocks.FakeNameSystem) *rtns {
+	rtns, err := newRTNS(ctx, &kaas.Client{ServiceClient: fkb}, newConfig(t))
 	if err != nil {
 		t.Fatal(err)
 	}

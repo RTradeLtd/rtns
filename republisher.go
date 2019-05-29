@@ -34,7 +34,7 @@ var FailureRetryInterval = time.Minute * 5
 const DefaultRecordLifetime = time.Hour * 24
 
 // StartRepublisher is used to start our republisher service
-func (r *RTNS) startRepublisher() {
+func (r *rtns) startRepublisher() {
 	timer := time.NewTimer(DefaultRebroadcastInterval)
 	defer timer.Stop()
 	for {
@@ -50,7 +50,7 @@ func (r *RTNS) startRepublisher() {
 	}
 }
 
-func (r *RTNS) republishEntries() error {
+func (r *rtns) republishEntries() error {
 	keys := r.cache.List()
 	if len(keys) == 0 {
 		return errNoRecordsPublisher
@@ -67,7 +67,7 @@ func (r *RTNS) republishEntries() error {
 	return nil
 }
 
-func (r *RTNS) republishEntry(ctx context.Context, priv ci.PrivKey) error {
+func (r *rtns) republishEntry(ctx context.Context, priv ci.PrivKey) error {
 	id, err := peer.IDFromPrivateKey(priv)
 	if err != nil {
 		return err
@@ -87,7 +87,7 @@ func (r *RTNS) republishEntry(ctx context.Context, priv ci.PrivKey) error {
 	return r.ns.PublishWithEOL(ctx, priv, lv, eol)
 }
 
-func (r *RTNS) getLastVal(id peer.ID) (path.Path, error) {
+func (r *rtns) getLastVal(id peer.ID) (path.Path, error) {
 	// Look for it locally only
 	val, err := r.ds.Get(namesys.IpnsDsKey(id))
 	switch err {
