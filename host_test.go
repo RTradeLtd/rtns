@@ -24,7 +24,86 @@ var (
 // we need to configure fakes for the krab client
 // so that we may spoof a valid krab backend
 
-func Test_New_Publisher(t *testing.T) {
+func Test_Service(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	//////////////////
+	// setup mocks //
+	////////////////
+
+	pk1 := newPK(t)
+	pk1Bytes, err := pk1.Bytes()
+	if err != nil {
+		t.Fatal(err)
+	}
+	pk2 := newPK(t)
+	pk2Bytes, err := pk2.Bytes()
+	if err != nil {
+		t.Fatal(err)
+	}
+	fkb := &mocks.FakeServiceClient{}
+	fkb.GetPrivateKeyReturnsOnCall(0, &pb.Response{Status: "Ok", PrivateKey: pk1Bytes}, nil)
+	fkb.GetPrivateKeyReturnsOnCall(1, &pb.Response{Status: "BAD", PrivateKey: pk2Bytes}, errors.New("no key"))
+
+	fkb.HasPrivateKeyReturnsOnCall(0, &pb.Response{Status: "OK"}, nil)
+	fkb.HasPrivateKeyReturnsOnCall(1, &pb.Response{Status: "BAD"}, errors.New("no key"))
+
+	fns := &mocks.FakeNameSystem{}
+	fns.PublishReturnsOnCall(0, nil)
+	fns.PublishReturnsOnCall(1, nil)
+	fns.PublishReturnsOnCall(2, errors.New("publish failed"))
+
+	service := newTestService(ctx, t, fkb, fns)
+	defer service.Close()
+	service.DefaultBootstrap()
+
+	pid, err := peer.IDFromPublicKey(pk1.GetPublic())
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println("pk1", pid.String())
+	if err := service.Publish(ctx, pk2, true, "pk1", ipfsPath2); err != nil {
+		t.Fatal(err)
+	}
+
+	pid, err = peer.IDFromPublicKey(pk2.GetPublic())
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println("pk2", pid.String())
+	if err := service.Publish(ctx, pk2, true, "pk2", ipfsPath2); err != nil {
+		t.Fatal(err)
+	}
+
+	if err := service.Publish(ctx, pk2, true, "pk2", ipfsPath2); err == nil {
+		t.Fatal("error expected")
+	}
+
+	if has, err := service.HasKey("pk1"); err != nil {
+		t.Fatal(err)
+	} else if !has {
+		t.Fatal("should have key")
+	}
+	if has, err := service.HasKey("pk2"); err == nil {
+		t.Fatal("error expected")
+	} else if has {
+		t.Fatal("should not have key")
+	}
+
+	if pkRet, err := service.GetKey("pk1"); err != nil {
+		t.Fatal(err)
+	} else if !reflect.DeepEqual(pk1, pkRet) {
+		t.Fatal("keys should be equal")
+	}
+	if pkRet, err := service.GetKey("pk1"); err == nil {
+		t.Fatal("error expected")
+	} else if pkRet != nil {
+		t.Fatal("key should be nil")
+	}
+}
+
+func Test_RTNS(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
@@ -159,6 +238,10 @@ func Test_Keystore(t *testing.T) {
 	} else if len(ids) != 0 {
 		t.Fatal("bad key length returned")
 	}
+}
+
+func newTestService(ctx context.Context, t *testing.T, fkb *mocks.FakeServiceClient, fns *mocks.FakeNameSystem) Service {
+	return newTestRTNS(ctx, t, fkb, fns)
 }
 
 func newTestRTNS(ctx context.Context, t *testing.T, fkb *mocks.FakeServiceClient, fns *mocks.FakeNameSystem) *rtns {
