@@ -25,7 +25,7 @@ type Service interface {
 	// service management
 	Close()
 	DefaultBootstrap()
-
+	Bootstrap(peers []peerstore.PeerInfo)
 	// record publishing
 	Publish(ctx context.Context, pk ci.PrivKey, cache bool, keyID, content string) error
 	PublishWithEOL(ctx context.Context, pk ci.PrivKey, eol time.Time, cache bool, keyID, content string) error
