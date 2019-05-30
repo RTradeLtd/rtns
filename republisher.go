@@ -51,7 +51,7 @@ func (r *rtns) startRepublisher() {
 }
 
 func (r *rtns) republishEntries() error {
-	keys := r.cache.List()
+	keys := r.cache.list()
 	if len(keys) == 0 {
 		return errNoRecordsPublisher
 	}

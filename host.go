@@ -22,16 +22,22 @@ import (
 // Service implements the rtns logic
 // as a consumable service or library.
 type Service interface {
-	// service management
+	// Close is used to trigger a shutdown of internal services
 	Close()
-	DefaultBootstrap()
 
-	// record publishing
+	// DefaultBootstrapPeers returns the normal libp2p bootstrap peers, as well as the production nodes of Temporal.
+	DefaultBootstrapPeers() []peerstore.PeerInfo
+	// Bootstrap is used to bootstrap the dht
+	Bootstrap(peers []peerstore.PeerInfo)
+
+	// Publish enables publishing of an IPNS record with a default lifetime of 24 hours
 	Publish(ctx context.Context, pk ci.PrivKey, cache bool, keyID, content string) error
+	// PublishWithEOL allows specifying a lifetime for this record overriding the default lifetime of 24 hours
 	PublishWithEOL(ctx context.Context, pk ci.PrivKey, eol time.Time, cache bool, keyID, content string) error
 
-	// key management
+	// GetKey returns a key from the underlying krab keystore
 	GetKey(name string) (ci.PrivKey, error)
+	// HasKey returns whether or not the key is in our keystore
 	HasKey(name string) (bool, error)
 }
 
@@ -54,8 +60,8 @@ type rtns struct {
 	ns    namesys.NameSystem
 	ps    peerstore.Peerstore
 	ctx   context.Context
-	keys  *RKeystore
-	cache *Cache
+	keys  *rkeystore
+	cache *cache
 }
 
 // NewService is used to instantiate an RTNS publisher service
@@ -80,8 +86,8 @@ func newRTNS(ctx context.Context, kbClient *kaas.Client, cfg Config) (*rtns, err
 		ps:    ps,
 		ns:    namesys.NewNameSystem(dt, ds, 128),
 		ctx:   ctx,
-		keys:  NewRKeystore(ctx, kbClient),
-		cache: NewCache(),
+		keys:  newRKeystore(ctx, kbClient),
+		cache: newCache(),
 	}
 	go r.startRepublisher()
 	return r, nil
@@ -100,7 +106,7 @@ func (r *rtns) Close() {
 	}
 }
 
-// Publish is used to publish content with a fixed lifetime and ttl
+// Publish enables publishing of an IPNS record with a default lifetime of 24 hours
 func (r *rtns) Publish(ctx context.Context, pk ci.PrivKey, cache bool, keyID, content string) error {
 	if cache {
 		r.cache.Set(keyID)
@@ -108,7 +114,7 @@ func (r *rtns) Publish(ctx context.Context, pk ci.PrivKey, cache bool, keyID, co
 	return r.ns.Publish(ctx, pk, path.FromString(content))
 }
 
-// PublishWithEOL is used to publish an IPNS record with non default lifetime values
+// PublishWithEOL allows specifying a lifetime for this record overriding the default lifetime of 24 hours
 func (r *rtns) PublishWithEOL(ctx context.Context, pk ci.PrivKey, eol time.Time, cache bool, keyID, content string) error {
 	if cache {
 		r.cache.Set(keyID)
@@ -116,14 +122,13 @@ func (r *rtns) PublishWithEOL(ctx context.Context, pk ci.PrivKey, eol time.Time,
 	return r.ns.PublishWithEOL(ctx, pk, path.FromString(content), eol)
 }
 
-// GetKey is used to retrieve a key from the
-// underlying keystore
+// GetKey returns a key from the underlying krab keystore
+
 func (r *rtns) GetKey(name string) (ci.PrivKey, error) {
 	return r.keys.Get(name)
 }
 
-// HasKey is used to check if the underlying keystore
-// contains the desired key
+// HasKey returns whether or not the key is in our keystore
 func (r *rtns) HasKey(name string) (bool, error) {
 	return r.keys.Has(name)
 }
