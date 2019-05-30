@@ -13,6 +13,7 @@ require (
 	github.com/google/go-cmp v0.3.0 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20190430165422-3e4dfb77656c // indirect
 	github.com/ipfs/go-datastore v0.0.5
+	github.com/ipfs/go-ds-badger v0.0.3
 	github.com/ipfs/go-ipfs v0.4.20
 	github.com/ipfs/go-ipfs-config v0.0.4
 	github.com/ipfs/go-ipfs-keystore v0.0.1
