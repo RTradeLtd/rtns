@@ -11,8 +11,8 @@ import (
 // DefaultBootstrap is a wrapper around Bootstrap
 // that handles bootstrapping to the default libp2p bootstrap
 // nodes, as well as the Temporal production nodes
-func (r *rtns) DefaultBootstrap() {
-	r.Bootstrap(lp.DefaultBootstrapPeers())
+func (r *rtns) DefaultBootstrapPeers() []peerstore.PeerInfo {
+	return lp.DefaultBootstrapPeers()
 }
 
 // Bootstrap is an optional helper to connect to the given peers and bootstrap
