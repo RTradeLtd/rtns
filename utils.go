@@ -8,9 +8,8 @@ import (
 	peerstore "github.com/libp2p/go-libp2p-peerstore"
 )
 
-// DefaultBootstrap is a wrapper around Bootstrap
-// that handles bootstrapping to the default libp2p bootstrap
-// nodes, as well as the Temporal production nodes
+// DefaultBootstrapPeers returns the normal libp2p bootstrap peers,
+// as well as the production nodes of Temporal.
 func (r *rtns) DefaultBootstrapPeers() []peerstore.PeerInfo {
 	return lp.DefaultBootstrapPeers()
 }
