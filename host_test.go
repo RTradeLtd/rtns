@@ -56,7 +56,7 @@ func Test_Service(t *testing.T) {
 
 	service := newTestService(ctx, t, fkb, fns)
 	defer service.Close()
-	service.DefaultBootstrap()
+	service.Bootstrap(service.DefaultBootstrapPeers())
 
 	pid, err := peer.IDFromPublicKey(pk1.GetPublic())
 	if err != nil {
@@ -136,7 +136,7 @@ func Test_RTNS(t *testing.T) {
 
 	rtns := newTestRTNS(ctx, t, fkb, fns)
 	defer rtns.Close()
-	rtns.DefaultBootstrap()
+	rtns.Bootstrap(rtns.DefaultBootstrapPeers())
 
 	//////////////////
 	// start tests //
