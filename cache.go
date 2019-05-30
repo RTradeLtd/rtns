@@ -2,20 +2,20 @@ package rtns
 
 import "sync"
 
-// Cache is used to cache keyIDs
+// cache is used to cache keyIDs
 // we have published
-type Cache struct {
+type cache struct {
 	entries map[string]bool
 	mux     sync.RWMutex
 }
 
-// NewCache is used to instantiate a new cache
-func NewCache() *Cache {
-	return &Cache{entries: make(map[string]bool)}
+// newCache is used to instantiate a new cache
+func newCache() *cache {
+	return &cache{entries: make(map[string]bool)}
 }
 
-// Set is used to set an item in cache
-func (c *Cache) Set(entry string) {
+// set is used to set an item in cache
+func (c *cache) Set(entry string) {
 	if c.exists(entry) {
 		return
 	}
@@ -24,15 +24,15 @@ func (c *Cache) Set(entry string) {
 	c.mux.Unlock()
 }
 
-func (c *Cache) exists(entry string) bool {
+func (c *cache) exists(entry string) bool {
 	c.mux.RLock()
 	_, exists := c.entries[entry]
 	c.mux.RUnlock()
 	return exists
 }
 
-// List is used to list items in our cache
-func (c *Cache) List() []string {
+// list is used to list items in our cache
+func (c *cache) list() []string {
 	c.mux.RLock()
 	var entries []string
 	for entry := range c.entries {

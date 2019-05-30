@@ -150,8 +150,8 @@ func Test_RTNS(t *testing.T) {
 	if err := rtns.Publish(ctx, pk1, true, "pk1", ipfsPath1); err != nil {
 		t.Fatal(err)
 	}
-	if len(rtns.cache.List()) != 1 {
-		fmt.Println("cache length:", len(rtns.cache.List()))
+	if len(rtns.cache.list()) != 1 {
+		fmt.Println("cache length:", len(rtns.cache.list()))
 		t.Fatal("invalid cache length")
 	}
 	pid, err := peer.IDFromPublicKey(pk1.GetPublic())
@@ -163,8 +163,8 @@ func Test_RTNS(t *testing.T) {
 	if err := rtns.Publish(ctx, pk2, true, "pk2", ipfsPath2); err != nil {
 		t.Fatal(err)
 	}
-	if len(rtns.cache.List()) != 2 {
-		fmt.Println("cache length:", len(rtns.cache.List()))
+	if len(rtns.cache.list()) != 2 {
+		fmt.Println("cache length:", len(rtns.cache.list()))
 		t.Fatal("invalid cache length")
 	}
 	pid, err = peer.IDFromPublicKey(pk2.GetPublic())
@@ -196,7 +196,7 @@ func Test_Keystore(t *testing.T) {
 	fkb.GetPrivateKeyReturnsOnCall(0, &pb.Response{Status: "OK", PrivateKey: pkBytes}, nil)
 	fkb.GetPrivateKeyReturnsOnCall(1, &pb.Response{Status: "BAD"}, errors.New("no keys"))
 
-	rk := NewRKeystore(ctx, &kaas.Client{ServiceClient: fkb})
+	rk := newRKeystore(ctx, &kaas.Client{ServiceClient: fkb})
 
 	// test has
 	if exists, err := rk.Has("hello"); err != nil {

@@ -60,8 +60,8 @@ type rtns struct {
 	ns    namesys.NameSystem
 	ps    peerstore.Peerstore
 	ctx   context.Context
-	keys  *RKeystore
-	cache *Cache
+	keys  *rkeystore
+	cache *cache
 }
 
 // NewService is used to instantiate an RTNS publisher service
@@ -86,8 +86,8 @@ func newRTNS(ctx context.Context, kbClient *kaas.Client, cfg Config) (*rtns, err
 		ps:    ps,
 		ns:    namesys.NewNameSystem(dt, ds, 128),
 		ctx:   ctx,
-		keys:  NewRKeystore(ctx, kbClient),
-		cache: NewCache(),
+		keys:  newRKeystore(ctx, kbClient),
+		cache: newCache(),
 	}
 	go r.startRepublisher()
 	return r, nil
