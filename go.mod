@@ -7,8 +7,12 @@ require (
 	github.com/RTradeLtd/config/v2 v2.1.4 // indirect
 	github.com/RTradeLtd/grpc v0.0.0-20190528193535-5184ecc77228
 	github.com/RTradeLtd/kaas/v2 v2.1.1
+	github.com/allegro/bigcache v1.2.0 // indirect
+	github.com/aristanetworks/goarista v0.0.0-20190531155855-fef20d617fa7 // indirect
 	github.com/davidlazar/go-crypto v0.0.0-20190522120613-62389b5e4ae0 // indirect
+	github.com/deckarep/golang-set v1.7.1 // indirect
 	github.com/dgryski/go-farm v0.0.0-20190423205320-6a90982ecee2 // indirect
+	github.com/ethereum/go-ethereum v1.8.27
 	github.com/gogo/protobuf v1.2.1
 	github.com/google/go-cmp v0.3.0 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20190430165422-3e4dfb77656c // indirect
@@ -33,6 +37,8 @@ require (
 	github.com/libp2p/go-libp2p-pnet v0.1.0
 	github.com/libp2p/go-libp2p-record v0.1.0
 	github.com/multiformats/go-multiaddr v0.0.4
+	github.com/pborman/uuid v1.2.0 // indirect
+	github.com/rjeczalik/notify v0.9.2 // indirect
 	google.golang.org/genproto v0.0.0-20190508193815-b515fa19cec8 // indirect
 	google.golang.org/grpc v1.20.1
 )
