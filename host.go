@@ -8,7 +8,6 @@ import (
 	kaas "github.com/RTradeLtd/kaas/v2"
 	lp "github.com/RTradeLtd/rtns/internal/libp2p"
 	"github.com/ipfs/go-datastore"
-	dssync "github.com/ipfs/go-datastore/sync"
 	"github.com/ipfs/go-ipfs/namesys"
 	"github.com/ipfs/go-path"
 	ci "github.com/libp2p/go-libp2p-crypto"
@@ -43,7 +42,7 @@ type Service interface {
 
 // Config is used to configure the RTNS service
 type Config struct {
-	DSPath      string
+	Datastore   datastore.Batching
 	PK          ci.PrivKey
 	ListenAddrs []multiaddr.Multiaddr
 	Secret      []byte
@@ -72,9 +71,8 @@ func NewService(ctx context.Context, kbClient *kaas.Client, cfg Config) (Service
 // NewRTNS is used to instantiate our RTNS service, and start the republisher
 // intended to be used as a `Publisher` type by external libraries
 func newRTNS(ctx context.Context, kbClient *kaas.Client, cfg Config) (*rtns, error) {
-	ds := dssync.MutexWrap(datastore.NewMapDatastore())
 	ps := pstoremem.NewPeerstore()
-	ht, dt, err := lp.SetupLibp2p(ctx, cfg.PK, cfg.Secret, cfg.ListenAddrs, ps, ds)
+	ht, dt, err := lp.SetupLibp2p(ctx, cfg.PK, cfg.Secret, cfg.ListenAddrs, ps, cfg.Datastore)
 	if err != nil {
 		return nil, err
 	}
@@ -82,9 +80,9 @@ func newRTNS(ctx context.Context, kbClient *kaas.Client, cfg Config) (*rtns, err
 		h:     ht,
 		d:     dt,
 		pk:    cfg.PK,
-		ds:    ds,
+		ds:    cfg.Datastore,
 		ps:    ps,
-		ns:    namesys.NewNameSystem(dt, ds, 128),
+		ns:    namesys.NewNameSystem(dt, cfg.Datastore, 128),
 		ctx:   ctx,
 		keys:  newRKeystore(ctx, kbClient),
 		cache: newCache(),
