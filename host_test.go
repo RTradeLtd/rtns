@@ -10,6 +10,8 @@ import (
 	pb "github.com/RTradeLtd/grpc/krab"
 	kaas "github.com/RTradeLtd/kaas/v2"
 	"github.com/RTradeLtd/rtns/mocks"
+	datastore "github.com/ipfs/go-datastore"
+	dssync "github.com/ipfs/go-datastore/sync"
 	crypto "github.com/libp2p/go-libp2p-crypto"
 	peer "github.com/libp2p/go-libp2p-peer"
 	"github.com/multiformats/go-multiaddr"
@@ -269,6 +271,6 @@ func newConfig(t *testing.T) Config {
 	return Config{
 		PK:          pk,
 		ListenAddrs: []multiaddr.Multiaddr{addr},
-		DSPath:      "test",
+		Datastore:   dssync.MutexWrap(datastore.NewMapDatastore()),
 	}
 }
