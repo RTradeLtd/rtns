@@ -13,13 +13,14 @@ require (
 	github.com/google/go-cmp v0.3.0 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20190430165422-3e4dfb77656c // indirect
 	github.com/ipfs/go-datastore v0.0.5
-	github.com/ipfs/go-ipfs v0.4.20
+	github.com/ipfs/go-ipfs v0.4.21
+	github.com/ipfs/go-ipfs-cmdkit v0.0.1 // indirect
 	github.com/ipfs/go-ipfs-config v0.0.4
 	github.com/ipfs/go-ipfs-keystore v0.0.1
 	github.com/ipfs/go-ipns v0.0.1
 	github.com/ipfs/go-path v0.0.7
 	github.com/ipfs/go-unixfs v0.0.8 // indirect
-	github.com/ipfs/interface-go-ipfs-core v0.0.6
+	github.com/ipfs/interface-go-ipfs-core v0.0.8
 	github.com/libp2p/go-libp2p v0.1.0
 	github.com/libp2p/go-libp2p-circuit v0.1.0
 	github.com/libp2p/go-libp2p-core v0.0.1
