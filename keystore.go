@@ -7,7 +7,7 @@ import (
 	pb "github.com/RTradeLtd/grpc/krab"
 	kaas "github.com/RTradeLtd/kaas/v2"
 	keystore "github.com/ipfs/go-ipfs-keystore"
-	ci "github.com/libp2p/go-libp2p-crypto"
+	ci "github.com/libp2p/go-libp2p-core/crypto"
 )
 
 // ensure rkeystore satisfies

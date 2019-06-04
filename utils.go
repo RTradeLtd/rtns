@@ -5,12 +5,12 @@ import (
 	"sync"
 
 	lp "github.com/RTradeLtd/rtns/internal/libp2p"
-	peerstore "github.com/libp2p/go-libp2p-peerstore"
+	libp2p "github.com/libp2p/go-libp2p-core"
 )
 
 // DefaultBootstrapPeers returns the normal libp2p bootstrap peers,
 // as well as the production nodes of Temporal.
-func (r *rtns) DefaultBootstrapPeers() []peerstore.PeerInfo {
+func (r *rtns) DefaultBootstrapPeers() []libp2p.PeerAddrInfo {
 	return lp.DefaultBootstrapPeers()
 }
 
@@ -19,14 +19,14 @@ func (r *rtns) DefaultBootstrapPeers() []peerstore.PeerInfo {
 // logged and a warning is printed when less than half of the given peers
 // could be contacted. It is fine to pass a list where some peers will not be
 // reachable.
-func (r *rtns) Bootstrap(peers []peerstore.PeerInfo) {
+func (r *rtns) Bootstrap(peers []libp2p.PeerAddrInfo) {
 	connected := make(chan struct{})
 
 	var wg sync.WaitGroup
 	for _, pinfo := range peers {
 		//h.Peerstore().AddAddrs(pinfo.ID, pinfo.Addrs, peerstore.PermanentAddrTTL)
 		wg.Add(1)
-		go func(pinfo peerstore.PeerInfo) {
+		go func(pinfo libp2p.PeerAddrInfo) {
 			defer wg.Done()
 			err := r.h.Connect(r.ctx, pinfo)
 			if err != nil {

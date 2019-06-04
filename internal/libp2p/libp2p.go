@@ -8,13 +8,14 @@ import (
 	"github.com/ipfs/go-ipns"
 	"github.com/libp2p/go-libp2p"
 	circuit "github.com/libp2p/go-libp2p-circuit"
-	crypto "github.com/libp2p/go-libp2p-crypto"
-	host "github.com/libp2p/go-libp2p-host"
-	ipnet "github.com/libp2p/go-libp2p-interface-pnet"
+	libcore "github.com/libp2p/go-libp2p-core"
+	crypto "github.com/libp2p/go-libp2p-core/crypto"
+	host "github.com/libp2p/go-libp2p-core/host"
+	peerstore "github.com/libp2p/go-libp2p-core/peerstore"
+	ipnet "github.com/libp2p/go-libp2p-core/pnet"
 	dht "github.com/libp2p/go-libp2p-kad-dht"
 	dhtOpts "github.com/libp2p/go-libp2p-kad-dht/opts"
 	peer "github.com/libp2p/go-libp2p-peer"
-	peerstore "github.com/libp2p/go-libp2p-peerstore"
 	pnet "github.com/libp2p/go-libp2p-pnet"
 	record "github.com/libp2p/go-libp2p-record"
 	routedhost "github.com/libp2p/go-libp2p/p2p/host/routed"
@@ -88,16 +89,16 @@ func SetupLibp2p(
 // DefaultBootstrapPeers returns the default lsit
 // of bootstrap peers, with added temporal production
 // peers
-func DefaultBootstrapPeers() []peerstore.PeerInfo {
+func DefaultBootstrapPeers() []libcore.PeerAddrInfo {
 	// conversion copied from go-ipfs
 	defaults, _ := config.DefaultBootstrapPeers()
 	tPeers, _ := config.ParseBootstrapPeers(temporalBootstrap)
 	defaults = append(defaults, tPeers...)
-	pinfos := make(map[peer.ID]*peerstore.PeerInfo)
+	pinfos := make(map[peer.ID]*libcore.PeerAddrInfo)
 	for _, bootstrap := range defaults {
 		pinfo, ok := pinfos[bootstrap.ID()]
 		if !ok {
-			pinfo = new(peerstore.PeerInfo)
+			pinfo = new(libcore.PeerAddrInfo)
 			pinfos[bootstrap.ID()] = pinfo
 			pinfo.ID = bootstrap.ID()
 		}
@@ -105,7 +106,7 @@ func DefaultBootstrapPeers() []peerstore.PeerInfo {
 		pinfo.Addrs = append(pinfo.Addrs, bootstrap.Transport())
 	}
 
-	var peers []peerstore.PeerInfo
+	var peers []libcore.PeerAddrInfo
 	for _, pinfo := range pinfos {
 		peers = append(peers, *pinfo)
 	}

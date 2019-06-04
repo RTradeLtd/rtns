@@ -10,10 +10,11 @@ import (
 	"github.com/ipfs/go-datastore"
 	"github.com/ipfs/go-ipfs/namesys"
 	"github.com/ipfs/go-path"
-	ci "github.com/libp2p/go-libp2p-crypto"
-	host "github.com/libp2p/go-libp2p-host"
+	pinfo "github.com/libp2p/go-libp2p-core"
+	ci "github.com/libp2p/go-libp2p-core/crypto"
+	host "github.com/libp2p/go-libp2p-core/host"
+	peerstore "github.com/libp2p/go-libp2p-core/peerstore"
 	dht "github.com/libp2p/go-libp2p-kad-dht"
-	peerstore "github.com/libp2p/go-libp2p-peerstore"
 	"github.com/libp2p/go-libp2p-peerstore/pstoremem"
 	"github.com/multiformats/go-multiaddr"
 )
@@ -25,9 +26,9 @@ type Service interface {
 	Close()
 
 	// DefaultBootstrapPeers returns the normal libp2p bootstrap peers, as well as the production nodes of Temporal.
-	DefaultBootstrapPeers() []peerstore.PeerInfo
+	DefaultBootstrapPeers() []pinfo.PeerAddrInfo
 	// Bootstrap is used to bootstrap the dht
-	Bootstrap(peers []peerstore.PeerInfo)
+	Bootstrap(peers []pinfo.PeerAddrInfo)
 
 	// Publish enables publishing of an IPNS record with a default lifetime of 24 hours
 	Publish(ctx context.Context, pk ci.PrivKey, cache bool, keyID, content string) error
