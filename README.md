@@ -4,11 +4,18 @@ RTNS (RTrade Name Service) is a stand-alone IPNS record management service, desi
 
 It is essentially a modified and condensed version of [go-ipfs/namesys](https://github.com/ipfs/go-ipfs/tree/master/namesys) with minor optimizations
 
-# Limitations
+## Development
+
+1. Fork and clone the repository
+2. `cd` into the cloned repository
+3. If you cloned the repository into `$GOPATH/src`, run `GO111MODULE=on go mod download` to download the dependencies. If not, run `go mod download`
+4. To run all the tests, use `go test ./...`
+
+## Limitations
 
 * When used within Temporal, any keys derived from the fail-over KaaS host are not eligible for automated republishing
 
-# Future Improvements
+## Future Improvements
 
 * DNSLink support
 * Act as a gateway implementation to TNS (Temporal Name Server)
