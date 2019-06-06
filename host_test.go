@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"reflect"
 	"testing"
+	"time"
 
 	pb "github.com/RTradeLtd/grpc/krab"
 	kaas "github.com/RTradeLtd/kaas/v2"
@@ -56,6 +57,10 @@ func Test_Service(t *testing.T) {
 	fns.PublishReturnsOnCall(1, nil)
 	fns.PublishReturnsOnCall(2, errors.New("publish failed"))
 
+	fns.PublishWithEOLReturnsOnCall(0, nil)
+	fns.PublishWithEOLReturnsOnCall(1, nil)
+	fns.PublishWithEOLReturnsOnCall(2, errors.New("publish failed"))
+
 	service := newTestService(ctx, t, fkb, fns)
 	defer service.Close()
 	service.Bootstrap(service.DefaultBootstrapPeers())
@@ -79,6 +84,21 @@ func Test_Service(t *testing.T) {
 	}
 
 	if err := service.Publish(ctx, pk2, true, "pk2", ipfsPath2); err == nil {
+		t.Fatal("error expected")
+	}
+
+	now := time.Now()
+	afterTwoDays := now.Add(time.Hour * 48)
+
+	if err := service.PublishWithEOL(ctx, pk2, afterTwoDays, true, "pk1", ipfsPath2); err != nil {
+		t.Fatal(err)
+	}
+
+	if err := service.PublishWithEOL(ctx, pk2, afterTwoDays, true, "pk2", ipfsPath2); err != nil {
+		t.Fatal(err)
+	}
+
+	if err := service.PublishWithEOL(ctx, pk2, afterTwoDays, true, "pk2", ipfsPath2); err == nil {
 		t.Fatal("error expected")
 	}
 
