@@ -11,11 +11,11 @@ import (
 	libcore "github.com/libp2p/go-libp2p-core"
 	crypto "github.com/libp2p/go-libp2p-core/crypto"
 	host "github.com/libp2p/go-libp2p-core/host"
+	peer "github.com/libp2p/go-libp2p-core/peer"
 	peerstore "github.com/libp2p/go-libp2p-core/peerstore"
 	ipnet "github.com/libp2p/go-libp2p-core/pnet"
 	dht "github.com/libp2p/go-libp2p-kad-dht"
 	dhtOpts "github.com/libp2p/go-libp2p-kad-dht/opts"
-	peer "github.com/libp2p/go-libp2p-peer"
 	pnet "github.com/libp2p/go-libp2p-pnet"
 	record "github.com/libp2p/go-libp2p-record"
 	routedhost "github.com/libp2p/go-libp2p/p2p/host/routed"
@@ -96,14 +96,14 @@ func DefaultBootstrapPeers() []libcore.PeerAddrInfo {
 	defaults = append(defaults, tPeers...)
 	pinfos := make(map[peer.ID]*libcore.PeerAddrInfo)
 	for _, bootstrap := range defaults {
-		pinfo, ok := pinfos[bootstrap.ID()]
+		pinfo, ok := pinfos[bootstrap.ID]
 		if !ok {
 			pinfo = new(libcore.PeerAddrInfo)
-			pinfos[bootstrap.ID()] = pinfo
-			pinfo.ID = bootstrap.ID()
+			pinfos[bootstrap.ID] = pinfo
+			pinfo.ID = bootstrap.ID
 		}
 
-		pinfo.Addrs = append(pinfo.Addrs, bootstrap.Transport())
+		pinfo.Addrs = append(pinfo.Addrs, bootstrap.Addrs...)
 	}
 
 	var peers []libcore.PeerAddrInfo
