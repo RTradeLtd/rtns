@@ -111,7 +111,7 @@ func Test_Keystore(t *testing.T) {
 	fkb.GetPrivateKeyReturnsOnCall(0, &pb.Response{Status: "OK", PrivateKey: pkBytes}, nil)
 	fkb.GetPrivateKeyReturnsOnCall(1, &pb.Response{Status: "BAD"}, errors.New("no keys"))
 
-	rk := newRKeystore(ctx, &kaas.Client{ServiceClient: fkb})
+	rk := NewRKeystore(ctx, &kaas.Client{ServiceClient: fkb})
 
 	// test has
 	if exists, err := rk.Has("hello"); err != nil {
@@ -161,7 +161,7 @@ func newTestRTNS(ctx context.Context, t *testing.T, fkb *mocks.FakeServiceClient
 	addrs := []multiaddr.Multiaddr{tutil.NewMultiaddr(t)}
 	pk := tutil.NewPrivateKey(t)
 	logger := tutil.NewLogger(t)
-	keys := newRKeystore(ctx, &kaas.Client{ServiceClient: fkb})
+	keys := NewRKeystore(ctx, &kaas.Client{ServiceClient: fkb})
 	_, dht := tutil.NewLibp2pHostAndDHT(ctx, t, logger.Desugar(), ds, ps, pk, addrs, nil)
 	rtns := NewRTNS(ctx, dht, ds, keys, 128)
 	rtns.ns = fns
