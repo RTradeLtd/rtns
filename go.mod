@@ -5,7 +5,7 @@ go 1.12
 require (
 	github.com/RTradeLtd/go-libp2p-testutils v1.0.0
 	github.com/RTradeLtd/grpc v0.0.0-20190528193535-5184ecc77228
-	github.com/RTradeLtd/kaas/v2 v2.1.3
+	github.com/RTradeLtd/kaas/v3 v3.0.0
 	github.com/btcsuite/btcd v0.0.0-20190605094302-a0d1e3e36d50 // indirect
 	github.com/davidlazar/go-crypto v0.0.0-20190522120613-62389b5e4ae0 // indirect
 	github.com/dgryski/go-farm v0.0.0-20190423205320-6a90982ecee2 // indirect
@@ -25,6 +25,7 @@ require (
 	github.com/libp2p/go-libp2p v0.2.0 // indirect
 	github.com/libp2p/go-libp2p-core v0.0.6
 	github.com/libp2p/go-libp2p-kad-dht v0.1.1
+	github.com/libp2p/go-libp2p-transport v0.0.5 // indirect
 	github.com/multiformats/go-multiaddr v0.0.4
 	golang.org/x/net v0.0.0-20190620200207-3b0461eec859 // indirect
 	golang.org/x/sys v0.0.0-20190626221950-04f50cda93cb // indirect
