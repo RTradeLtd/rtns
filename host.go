@@ -18,9 +18,9 @@ import (
 type RTNS struct {
 	ns    namesys.NameSystem
 	ds    datastore.Datastore
-	ctx   context.Context
 	keys  keystore.Keystore
 	cache *cache
+	ctx   context.Context
 }
 
 // NewRTNS instantiates our RTNS service, and starts the republisher
@@ -30,6 +30,7 @@ func NewRTNS(ctx context.Context, dt *dht.IpfsDHT, ds datastore.Datastore, keys 
 		ds:    ds,
 		keys:  keys,
 		cache: newCache(),
+		ctx:   ctx,
 	}
 	go r.startRepublisher()
 	return r
