@@ -1,8 +1,20 @@
 # RTNS
 
+[![GoDoc](https://godoc.org/github.com/RTradeLtd/rtns?status.svg)](https://godoc.org/github.com/RTradeLtd/rtns) [![codecov](https://codecov.io/gh/RTradeLtd/rtns/branch/master/graph/badge.svg)](https://codecov.io/gh/RTradeLtd/rtns) [![Build Status](https://travis-ci.com/RTradeLtd/rtns.svg?branch=master)](https://travis-ci.com/RTradeLtd/rtns) ![GitHub release](https://img.shields.io/github/release/RTradeLtd/rtns.svg?style=flat-square)
+
 RTNS (RTrade Name Service) is a stand-alone IPNS record management service, designed to facilitate secure publishing of IPNS records, leveraging an encrypted keystore known as [kaas](https://github.com/RTradeLtd/kaas). Internally it facilitates scheduled republishing of all published records.
 
 It is essentially a modified and condensed version of [go-ipfs/namesys](https://github.com/ipfs/go-ipfs/tree/master/namesys) with minor optimizations.
+
+## Usage
+
+To import this library:
+
+```Golang
+import "github.com/RTradeLtd/rtns"
+```
+
+You'll need to create a libp2p host, and a dht providing them as constructor arguments, and a valid keystore. This package contains a helper tool to wrab a KaaS client as a valid keystore interface type.
 
 ## Development
 
