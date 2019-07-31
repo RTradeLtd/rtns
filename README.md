@@ -6,6 +6,10 @@ RTNS (RTrade Name Service) is a stand-alone IPNS record management service, desi
 
 It is essentially a modified and condensed version of [go-ipfs/namesys](https://github.com/ipfs/go-ipfs/tree/master/namesys) with minor optimizations.
 
+## Multi-Language
+
+[![](https://img.shields.io/badge/Lang-English-blue.svg)](README.md)  [![jaywcjlove/sb](https://jaywcjlove.github.io/sb/lang/chinese.svg)](README-zh.md)
+
 ## Usage
 
 To import this library:
