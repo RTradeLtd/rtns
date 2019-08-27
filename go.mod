@@ -25,6 +25,7 @@ require (
 	github.com/libp2p/go-libp2p v0.2.0 // indirect
 	github.com/libp2p/go-libp2p-core v0.0.6
 	github.com/libp2p/go-libp2p-kad-dht v0.1.1
+	github.com/libp2p/go-libp2p-routing v0.1.0
 	github.com/libp2p/go-libp2p-transport v0.0.5 // indirect
 	github.com/multiformats/go-multiaddr v0.0.4
 	golang.org/x/net v0.0.0-20190620200207-3b0461eec859 // indirect

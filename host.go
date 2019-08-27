@@ -9,7 +9,7 @@ import (
 	"github.com/ipfs/go-ipfs/namesys"
 	"github.com/ipfs/go-path"
 	ci "github.com/libp2p/go-libp2p-core/crypto"
-	dht "github.com/libp2p/go-libp2p-kad-dht"
+	routing "github.com/libp2p/go-libp2p-routing"
 )
 
 // RTNS manages all the needed components
@@ -24,9 +24,9 @@ type RTNS struct {
 }
 
 // NewRTNS instantiates our RTNS service, and starts the republisher
-func NewRTNS(ctx context.Context, dt *dht.IpfsDHT, ds datastore.Datastore, keys keystore.Keystore, size int) *RTNS {
+func NewRTNS(ctx context.Context, rvs routing.ValueStore, ds datastore.Datastore, keys keystore.Keystore, size int) *RTNS {
 	r := &RTNS{
-		ns:    namesys.NewNameSystem(dt, ds, size),
+		ns:    namesys.NewNameSystem(rvs, ds, size),
 		ds:    ds,
 		keys:  keys,
 		cache: newCache(),
