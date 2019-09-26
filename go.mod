@@ -21,7 +21,7 @@ require (
 	github.com/ipfs/go-merkledag v0.1.0 // indirect
 	github.com/ipfs/go-path v0.0.7
 	github.com/ipfs/go-unixfs v0.0.8 // indirect
-	github.com/ipfs/interface-go-ipfs-core v0.1.0
+	github.com/ipfs/interface-go-ipfs-core v0.2.3
 	github.com/libp2p/go-libp2p v0.2.0 // indirect
 	github.com/libp2p/go-libp2p-core v0.0.6
 	github.com/libp2p/go-libp2p-kad-dht v0.1.1
