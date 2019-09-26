@@ -31,7 +31,7 @@ require (
 	golang.org/x/net v0.0.0-20190620200207-3b0461eec859 // indirect
 	golang.org/x/sys v0.0.0-20190626221950-04f50cda93cb // indirect
 	google.golang.org/genproto v0.0.0-20190502173448-54afdca5d873 // indirect
-	google.golang.org/grpc v1.20.1
+	google.golang.org/grpc v1.24.0
 )
 
 replace github.com/dgraph-io/badger v2.0.0-rc.2+incompatible => github.com/dgraph-io/badger/v2 v2.0.0-rc.2
