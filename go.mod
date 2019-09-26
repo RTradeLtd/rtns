@@ -23,7 +23,7 @@ require (
 	github.com/ipfs/go-unixfs v0.0.8 // indirect
 	github.com/ipfs/interface-go-ipfs-core v0.1.0
 	github.com/libp2p/go-libp2p v0.2.0 // indirect
-	github.com/libp2p/go-libp2p-core v0.0.6
+	github.com/libp2p/go-libp2p-core v0.2.3
 	github.com/libp2p/go-libp2p-kad-dht v0.1.1
 	github.com/libp2p/go-libp2p-routing v0.1.0
 	github.com/libp2p/go-libp2p-transport v0.0.5 // indirect
