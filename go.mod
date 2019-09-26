@@ -15,7 +15,7 @@ require (
 	github.com/ipfs/go-bitswap v0.1.1 // indirect
 	github.com/ipfs/go-datastore v0.0.5
 	github.com/ipfs/go-ds-badger v0.0.4 // indirect
-	github.com/ipfs/go-ipfs v0.4.21
+	github.com/ipfs/go-ipfs v0.4.22
 	github.com/ipfs/go-ipfs-keystore v0.0.1
 	github.com/ipfs/go-ipns v0.0.1
 	github.com/ipfs/go-merkledag v0.1.0 // indirect
