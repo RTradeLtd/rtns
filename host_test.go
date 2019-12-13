@@ -9,7 +9,7 @@ import (
 
 	tutil "github.com/RTradeLtd/go-libp2p-testutils"
 	pb "github.com/RTradeLtd/grpc/krab"
-	kaas "github.com/RTradeLtd/kaas/v3"
+	kaas "github.com/RTradeLtd/kaas/v2"
 	"github.com/RTradeLtd/rtns/mocks"
 	peer "github.com/libp2p/go-libp2p-core/peer"
 	"github.com/multiformats/go-multiaddr"
