@@ -96,14 +96,15 @@ func DefaultBootstrapPeers() []libcore.PeerAddrInfo {
 	defaults = append(defaults, tPeers...)
 	pinfos := make(map[peer.ID]*libcore.PeerAddrInfo)
 	for _, bootstrap := range defaults {
-		pinfo, ok := pinfos[bootstrap.ID()]
+		pinfo, ok := pinfos[bootstrap.ID]
 		if !ok {
 			pinfo = new(libcore.PeerAddrInfo)
-			pinfos[bootstrap.ID()] = pinfo
-			pinfo.ID = bootstrap.ID()
+			pinfos[bootstrap.ID] = pinfo
+			pinfo.ID = bootstrap.ID
 		}
-
-		pinfo.Addrs = append(pinfo.Addrs, bootstrap.Transport())
+		for _, addr := range bootstrap.Addrs {
+			pinfo.Addrs = append(pinfo.Addrs, addr)
+		}
 	}
 
 	var peers []libcore.PeerAddrInfo
