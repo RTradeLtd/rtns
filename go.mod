@@ -8,13 +8,12 @@ require (
 	github.com/RTradeLtd/grpc v0.0.0-20190528193535-5184ecc77228
 	github.com/RTradeLtd/kaas/v2 v2.1.1
 	github.com/davidlazar/go-crypto v0.0.0-20190522120613-62389b5e4ae0 // indirect
-	github.com/dgryski/go-farm v0.0.0-20190423205320-6a90982ecee2 // indirect
 	github.com/gogo/protobuf v1.2.1
 	github.com/google/go-cmp v0.3.0 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20190430165422-3e4dfb77656c // indirect
-	github.com/ipfs/go-datastore v0.0.5
-	github.com/ipfs/go-ipfs v0.4.21
-	github.com/ipfs/go-ipfs-cmdkit v0.0.1 // indirect
+	github.com/ipfs/go-datastore v0.3.1
+	github.com/ipfs/go-ds-badger v0.2.1-0.20191209122420-222c6d760ad4 // indirect
+	github.com/ipfs/go-ipfs v0.4.23
 	github.com/ipfs/go-ipfs-config v0.0.4
 	github.com/ipfs/go-ipfs-keystore v0.0.1
 	github.com/ipfs/go-ipns v0.0.1
@@ -35,3 +34,9 @@ require (
 	google.golang.org/genproto v0.0.0-20190508193815-b515fa19cec8 // indirect
 	google.golang.org/grpc v1.20.1
 )
+
+replace github.com/go-critic/go-critic v0.0.0-20181204210945-ee9bf5809ead => github.com/go-critic/go-critic v0.3.5-0.20190526074819-1df300866540
+
+replace github.com/golangci/golangci-lint => github.com/golangci/golangci-lint v1.18.0
+
+replace github.com/dgraph-io/badger v2.0.0-rc.2+incompatible => github.com/dgraph-io/badger v1.6.0-rc1
