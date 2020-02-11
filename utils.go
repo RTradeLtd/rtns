@@ -42,12 +42,10 @@ func (r *rtns) Bootstrap(peers []libp2p.PeerAddrInfo) {
 			connected <- struct{}{}
 		}(pinfo)
 	}
-
 	go func() {
 		wg.Wait()
 		close(connected)
 	}()
-
 	i := 0
 	for range connected {
 		i++
@@ -55,6 +53,16 @@ func (r *rtns) Bootstrap(peers []libp2p.PeerAddrInfo) {
 	if nPeers := len(peers); i < nPeers/2 {
 		fmt.Printf("only connected to %d bootstrap peers out of %d\n", i, nPeers)
 	}
-	// with changes to the dht library, this never returns an erro
-	r.d.Bootstrap(cctx)
+	go func(c context.Context) {
+		out := r.d.RefreshRoutingTable()
+		select {
+		case err := <-out:
+			if err != nil {
+				fmt.Printf("refresh routing table error: %v", err.Error())
+			}
+			return
+		case <-c.Done():
+			return
+		}
+	}(cctx)
 }
