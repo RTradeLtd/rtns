@@ -55,10 +55,6 @@ func (r *rtns) Bootstrap(peers []libp2p.PeerAddrInfo) {
 	if nPeers := len(peers); i < nPeers/2 {
 		fmt.Printf("only connected to %d bootstrap peers out of %d\n", i, nPeers)
 	}
-
-	err := r.d.Bootstrap(cctx)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	// with changes to the dht library, this never returns an erro
+	r.d.Bootstrap(cctx)
 }
