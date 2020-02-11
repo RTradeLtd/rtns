@@ -1,8 +1,10 @@
 package rtns
 
 import (
+	"context"
 	"fmt"
 	"sync"
+	"time"
 
 	lp "github.com/RTradeLtd/rtns/internal/libp2p"
 	libp2p "github.com/libp2p/go-libp2p-core"
@@ -20,6 +22,9 @@ func (r *rtns) DefaultBootstrapPeers() []libp2p.PeerAddrInfo {
 // could be contacted. It is fine to pass a list where some peers will not be
 // reachable.
 func (r *rtns) Bootstrap(peers []libp2p.PeerAddrInfo) {
+	// prevent hung processes, timeout this helper call after 2 minutes
+	cctx, cancel := context.WithTimeout(r.ctx, time.Minute*2)
+	defer cancel()
 	connected := make(chan struct{})
 
 	var wg sync.WaitGroup
@@ -28,7 +33,7 @@ func (r *rtns) Bootstrap(peers []libp2p.PeerAddrInfo) {
 		wg.Add(1)
 		go func(pinfo libp2p.PeerAddrInfo) {
 			defer wg.Done()
-			err := r.h.Connect(r.ctx, pinfo)
+			err := r.h.Connect(cctx, pinfo)
 			if err != nil {
 				fmt.Println("error", err.Error())
 				return
@@ -51,7 +56,7 @@ func (r *rtns) Bootstrap(peers []libp2p.PeerAddrInfo) {
 		fmt.Printf("only connected to %d bootstrap peers out of %d\n", i, nPeers)
 	}
 
-	err := r.d.Bootstrap(r.ctx)
+	err := r.d.Bootstrap(cctx)
 	if err != nil {
 		fmt.Println(err)
 		return
